@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input as Input;
-use App\PaginatorTrait as Paging;
 
 class UsersController extends Controller {
 
@@ -16,24 +15,19 @@ class UsersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
+ 
+        return \View::make('admin/users/all')
+                 ->with('page_title','Users List');
+
+    }
+    
+    public function dataTables(){
         
-        $page = Input::get('page');
-        $page = is_null($page) ? 1 : $page;
-        $params = ['ID' => '1','page' => $page];
+        $params = ['ID' => '1'];
         $headers = ['Authorization' => '$2y$10$XPJcN3w4yDVI45sUsOVbT.t7qXStvJ542ATAbUY.oCC4/CxBhObHm'];
         $response = \API::get("users", $headers, $params);
-       
-        $error = $response['code'] != 200 ? true : false;
-        
-        $data = !$error ? $response["data"] : $response["data"]->messages;
-        
-        $paginator = !$error ? Paging::getPaginator($response["data"]): "";
-        
-        return \View::make('admin/users/all')
-                 ->with('page_title','Users List')
-                 ->with('data',$data)
-                 ->with('paginator',$paginator)
-                 ->with('error',$error);
+
+        return (array)$response['data'];
     }
 
     /**
@@ -95,5 +89,7 @@ class UsersController extends Controller {
     public function destroy($id) {
         //
     }
+    
+    
 
 }

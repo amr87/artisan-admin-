@@ -31,18 +31,6 @@ Route::get('/', function () {
 Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
 
     Route::get('/', ['uses' => 'DashboardController@index']);
+    Route::get('/users/dataTables', ['uses' => 'UsersController@dataTables']);
     Route::resource('users','UsersController');
-});
-
-
-Route::get('/guzzle', function () {
-    
-   
-//    for($i = 0 ; $i < 300 ; $i++){
-// 
-//     $params = ['username' => "test".$i , "email" => 'test'.$i.'@test.com' , 'password' => str_random(8) ,'display_name' => 'Test User '.$i];
-//    $request = API::post("users/register", [], $params);
-//
-//
-//    }
 });

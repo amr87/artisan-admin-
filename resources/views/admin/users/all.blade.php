@@ -2,66 +2,58 @@
 
 @section('content')
 
-@if($error)
-<div class="alert alert-danger">{{$item['data']}}</div>
-@else
-@if(!empty($data->data))
 <div class="box">
+    <div class="box-header">
+        <h3 class="box-title">Data Table With Full Features</h3>
+    </div>
     <!-- /.box-header -->
     <div class="box-body">
-        <form class="sidebar-form" method="get" action="#">
-        <div class="input-group">
-          <input type="text" placeholder="Search..." class="form-control" name="q">
-              <span class="input-group-btn">
-                <button class="btn btn-flat" id="search-btn" name="search" type="submit"><i class="fa fa-search"></i>
-                </button>
-              </span>
-        </div>
-      </form>
-        <p> <span class="badge bg-green">Total Users: <?php echo $data->total;?></span></p>
-        <table  class="table table-condensed table-striped">
+        <table id="users" class="table table-bordered table-striped">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Username</th>
-                    <th>Display Name</th>
                     <th>Email</th>
-                    <th>Role</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($data->data as $user)
-                <tr>
-                    <td>{{ $user->username }}</td>
-                    <td>{{ $user->display_name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <?php
-                    if (!empty($user->roles)):
-                        $roles = [];
-                        foreach ($user->roles as $role):
-                            $roles[] = $role->label;
-                        endforeach;
-                    endif;
-                    ?>
-                    <td><?php echo!empty($user->roles) ? implode(" , ", $roles) : ""; ?></td>
-                </tr>
-                @endforeach
+
             </tbody>
+            <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                </tr>
+            </tfoot>
         </table>
     </div>
     <!-- /.box-body -->
-    <div class="box-footer clearfix">
-        
-      <?php echo $paginator;?>
-        
-    </div>
-    @else
-    <div class="alert alert-danger">No Users Found</div>
-    @endif
-    @endif
-
 </div>
-@section('footer_scripts')          
-
+<!-- /.box -->
+<!-- DataTables -->
+@section('footer_scripts')
+<script src="{{asset('bower_components/AdminLTE/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js')}}"></script>
+<script>
+$(function () {
+    $("#example1").DataTable();
+    $('#users').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        processing: true,
+        serverSide: true,
+        ajax: "{{ url('admin/users/dataTables')}}"
+    });
+});
+</script>
 @endsection
-
 @endsection

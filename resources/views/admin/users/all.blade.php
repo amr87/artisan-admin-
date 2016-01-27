@@ -4,7 +4,7 @@
 
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title">Data Table With Full Features</h3>
+ 
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -51,7 +51,8 @@ $(function () {
         "autoWidth": true,
         processing: true,
         serverSide: true,
-        ajax: "{{ url('admin/users/dataTables')}}"
+        ajax: "{{ getenv('API_URL') }}users/dataTables",
+     
     });
 });
 </script>

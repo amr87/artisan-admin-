@@ -21,14 +21,6 @@ class UsersController extends Controller {
 
     }
     
-    public function dataTables(){
-        
-        $params = ['ID' => '1'];
-        $headers = ['Authorization' => '$2y$10$XPJcN3w4yDVI45sUsOVbT.t7qXStvJ542ATAbUY.oCC4/CxBhObHm'];
-        $response = \API::get("users", $headers, $params);
-
-        return (array)$response['data'];
-    }
 
     /**
      * Show the form for creating a new resource.

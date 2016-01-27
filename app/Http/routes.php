@@ -31,5 +31,6 @@ Route::get('/', function () {
 Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
 
     Route::get('/', ['uses' => 'DashboardController@index']);
+    Route::get('/users/dataTables', ['uses' => 'UsersController@dataTables']);
     Route::resource('users','UsersController');
 });

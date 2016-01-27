@@ -4,7 +4,7 @@
 
 <div class="box">
     <div class="box-header">
- 
+
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -41,7 +41,6 @@
 <script src="{{asset('bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js')}}"></script>
 <script>
 $(function () {
-    $("#example1").DataTable();
     $('#users').DataTable({
         "paging": true,
         "lengthChange": true,
@@ -51,8 +50,7 @@ $(function () {
         "autoWidth": true,
         processing: true,
         serverSide: true,
-        ajax: "{{ getenv('API_URL') }}users/dataTables",
-     
+        ajax: "{{ url('/') }}/admin/users/dataTables",
     });
 });
 </script>

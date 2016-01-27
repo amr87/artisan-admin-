@@ -15,12 +15,10 @@ class UsersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
- 
-        return \View::make('admin/users/all')
-                 ->with('page_title','Users List');
 
+        return \View::make('admin/users/all')
+                        ->with('page_title', 'Users List');
     }
-    
 
     /**
      * Show the form for creating a new resource.
@@ -81,7 +79,16 @@ class UsersController extends Controller {
     public function destroy($id) {
         //
     }
-    
-    
+
+    public function dataTables() {
+        $params = [];
+        foreach (Input::all() as $key => $value) {
+            $params[$key] = $value;
+        }
+        return
+                (array)
+                \API::get('users/dataTables', ['Authorization' => '$2y$10$XPJcN3w4yDVI45sUsOVbT.t7qXStvJ542ATAbUY.oCC4/CxBhObHm'], array_merge(Input::all(),['ID'=> 1])
+                )['data'];
+    }
 
 }

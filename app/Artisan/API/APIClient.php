@@ -17,9 +17,11 @@ class APIClient {
     public function get($url, $headers, $params) {
 
         $response = $this->client->request(
-                'GET', $url, [
-            "headers" => array_merge($this->headers, $headers),
-            "query" => $params
+                'GET', 
+                $url, 
+                [
+                    "headers" => array_merge($this->headers, $headers),
+                    "query" => $params
                 ]
         );
 

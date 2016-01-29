@@ -1,3 +1,7 @@
 .role_search{
     margin:20px 0;
 }
+
+select#roles{
+    width:40%;
+}

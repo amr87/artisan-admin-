@@ -16,6 +16,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/login', ['uses' => 'UsersController@login', 'middleware' => 'web']);
+
+Route::get('/logout', ['uses' => 'UsersController@logout', 'middleware' => 'web']);
+
+Route::post('/login', ['uses' => 'UsersController@processLogin', 'middleware' => 'web']);
+
 
 /*
   |--------------------------------------------------------------------------
@@ -32,5 +38,7 @@ Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
 
     Route::get('/', ['uses' => 'DashboardController@index']);
     Route::get('/users/dataTables', ['uses' => 'UsersController@dataTables']);
-    Route::resource('users','UsersController');
+    Route::resource('users', 'UsersController');
+    
+    
 });

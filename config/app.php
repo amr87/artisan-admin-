@@ -155,7 +155,8 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Artisan\API\APIServiceProvider::class
+        Artisan\API\APIServiceProvider::class,
+        Artisan\Policy\PolicyServiceProvider::class,
     ],
 
     /*
@@ -202,6 +203,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
         'API'       => Artisan\API\API::class,
+        'Policy'    => Artisan\Policy\Policy::class,
 
     ],
 

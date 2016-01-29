@@ -4,9 +4,10 @@
 
 <div class="box">
     <div class="box-header">
-        @if(Policy::check("manage_users")->decide())
+ 
+        @check("manage_users")
         <a href="{{url('admin/users/create')}}" class="btn btn-primary"><span class="fa  fa-user-plus"></span> Add User </a>
-        @endif
+        @endcheck
     </div>
     <!-- /.box-header -->
     <div class="box-body">

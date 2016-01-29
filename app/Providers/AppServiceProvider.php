@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +14,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+         Blade::directive('check', function($expression) {
+            return "<?php if (\Policy::check($expression)->decide()): ?>";
+        });
+         Blade::directive('endcheck', function($expression) {
+            return "<?php endif; ?>";
+        });
+        
+
     }
 
     /**

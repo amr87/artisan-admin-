@@ -2,6 +2,8 @@
 
 namespace Artisan\API;
 
+use Illuminate\Support\Facades\Input as Input;
+
 class APIClient {
 
     protected $client;
@@ -17,11 +19,9 @@ class APIClient {
     public function get($url, $headers, $params) {
 
         $response = $this->client->request(
-                'GET', 
-                $url, 
-                [
-                    "headers" => array_merge($this->headers, $headers),
-                    "query" => $params
+                'GET', $url, [
+            "headers" => array_merge($this->headers, $headers),
+            "query" => $params
                 ]
         );
 
@@ -60,6 +60,22 @@ class APIClient {
 
         return [
             'code' => $response->getStatusCode(),
+            'phrase' => $response->getReasonPhrase(),
+            'data' => $this->filter($response->getBody())
+        ];
+    }
+
+    public function multipart($url, $params) {
+
+        $response = $this->client->request(
+                'POST', $url, [
+            "multipart" => $this->setMultipart($params)
+                ]
+        );
+
+        return [
+            'code' => $response->getStatusCode(),
+            'phrase' => $response->getReasonPhrase(),
             'data' => $this->filter($response->getBody())
         ];
     }
@@ -68,4 +84,24 @@ class APIClient {
         return json_decode($data);
     }
 
+    private function setMultipart($params) {
+
+        $multipart = [];
+        foreach ($params as $key => $value) {
+            if (Input::hasFile($key)) {
+                $item["name"] = $key;
+                $item["filename"] = Input::file($key)->getClientOriginalName();
+                $item["contents"] = fopen(Input::file($key)->getRealPath(), 'r');
+            } else {
+                $item["name"] = $key;
+                $item["contents"] = is_array($value) ? json_encode($value) : $value;
+            }
+            $multipart[] = $item;
+        }
+    
+       
+        return $multipart;
+    }
+    
 }
+    

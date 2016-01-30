@@ -31,17 +31,30 @@
         <ul class="sidebar-menu">
             <!--        <li class="header">HEADER</li>-->
             <!-- Optionally, you can add icons to the links -->
-
+            @check("manage_users")
             <li class="treeview">
-                <a class="active" href="#"><i class="fa fa-user"></i> <span>Users Management</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <a class="active" href="#"><i class="fa fa-user"></i> <span>Users </span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li>  <a href="{{url('admin/users')}}"><i class="fa fa-users"></i> <span> Users </span></a></li>
-                    <li>  <a  href="{{url('admin/roles')}}"> <i class="fa fa-lock"></i><span> Roles & Permissions </span></a></li>
+                    <li>  <a href="{{url('admin/users')}}"><i class="fa fa-users"></i> <span> Show Users </span></a></li>
+                    <li>  <a  href="{{url('admin/users/create')}}"> <i class="fa fa-user-plus"></i><span> Create User </span></a></li>
                 </ul>
             </li>
-
+            <li class="treeview">
+                <a class="active" href="#"><i class="fa fa-lock"></i> <span>Roles & Permissions </span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li>  <a href="{{url('admin/roles/')}}"><i class="fa fa-lock"></i> <span> Show Roles </span></a></li>
+                    <li>  <a  href="{{url('admin/roles/create')}}"> <i class="fa fa-plus"></i><span> Create Role </span></a></li>
+                </ul>
+            </li>
+            @endcheck
+            
+            @check("manage_news")
             <li><a href="{{url('admin/news')}}"><i class="fa fa-newspaper-o"></i> <span>News</span></a></li>
+            @endcheck     
+            
+             @check("manage_places")
             <li ><a href="{{url('admin/places')}}"><i class="fa fa-map-marker"></i>Places<span></span></a></li>
+            @endcheck
         </ul>
         <!-- /.sidebar-menu -->
     </section>

@@ -124,10 +124,10 @@
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="{{ Session::get('user_data')['avatar'] }}" class="img-circle" alt="User Image">
+                <img src="{{ Session::get('user_data')['avatar'] }}" class="img-circle" alt="{{ Session::get('user_data')['name'] }}">
 
                 <p>
-                  {{ Session::get('user_data')['name'] }} - {{ Session::get('user_data')['bio'] }}
+                  {{ Session::get('user_data')['name'] }} 
                   <small>Member since {{ Session::get('user_data')['member_since'] }}</small>
                 </p>
               </li>
@@ -149,7 +149,7 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="{{url('admin/users/profile')}}" class="btn btn-default btn-flat">Profile</a>
+                  <a href="{{url("admin/users")}}/{{Session::get('user_id')}}" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
                   <a href="{{url("/logout")}}" class="btn btn-default btn-flat">Sign out</a>

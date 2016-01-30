@@ -3,13 +3,7 @@
 <!-- /.login-logo -->
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>
-@if(count($errors) > 0)
-<div class="alert alert-danger alert-dismissable">
-    @foreach($errors as $error)
-    <p> {{$error}} </p>
-    @endforeach
-</div>
-@endif
+     @include('admin/errors')
     <form action="{{url('/login')}}" method="post">
       <div class="form-group has-feedback">
           <input required="" type="text" class="form-control" name="username" placeholder="Username">

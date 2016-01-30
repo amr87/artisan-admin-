@@ -38,6 +38,7 @@ Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
 
     Route::get('/', ['uses' => 'DashboardController@index']);
     Route::get('/users/dataTables', ['uses' => 'UsersController@dataTables']);
+    Route::get('/users/{id}/delete', ['uses' => 'UsersController@destroy']);
     Route::resource('users', 'UsersController');
     
     

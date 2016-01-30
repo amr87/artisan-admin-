@@ -30,7 +30,7 @@ class ACL {
 
     public function decide() {
         
-        return self::$can ? true : false;
+        return self::$can;
         
     }
 

@@ -62,6 +62,10 @@
                         <input value="{{ old('password_confirmation') }}" required="" type="password" placeholder="Confirm Password" name="password_confirmation" class="form-control">
                     </div>
                 </div>
+
+            </div>
+            <div class="col-md-6">
+                
                 <div class="form-group">
                     <label><strong> Phone</strong></label>
                     <div class="input-group">
@@ -69,8 +73,7 @@
                         <input value="{{ old('phone') }}" type="text" placeholder="phone" name="phone" class="form-control">
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6">
+                
                 <div class="form-group">
                     <label><strong> Bio</strong></label>
 

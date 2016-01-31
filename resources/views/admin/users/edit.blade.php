@@ -48,6 +48,30 @@
                     </div>
                 </div>
 
+
+
+
+                <div class="form-group">
+                    <label><strong> Bio</strong></label>
+
+                    <textarea name="bio" class="textarea" placeholder="Place some text here" style="width: 100%; height: 190px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">{{ $user->bio }}</textarea>
+
+                </div>
+
+            </div>
+            <div class="col-md-6">
+
+
+
+                <div class="image-upload">
+                    <label for="avatar">
+                        <strong> Change Avatar</strong>
+                        <img class="img-circle" src=" @if(!empty($user->avatar)) {{getenv('API_BASE')}}/{{$user->avatar}} @else {{url("images/avatar-placehodler.png")}} @endif"/>
+                    </label>
+
+                    <input  type="file" id="avatar" name="avatar"/>
+                </div>
+
                 <div class="form-group">
                     <label><strong>Old Password</strong></label>
                     <div class="input-group">
@@ -63,8 +87,6 @@
                         <input   type="password" placeholder="New Password" name="password" class="form-control">
                     </div>
                 </div>
-
-
                 <div class="form-group">
                     <label><strong> Phone</strong></label>
                     <div class="input-group">
@@ -72,26 +94,6 @@
                         <input value="{{ $user->phone }}" type="text" placeholder="phone" name="phone" class="form-control">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label><strong> Bio</strong></label>
-
-                    <textarea name="bio" class="textarea" placeholder="Place some text here" style="width: 100%; height: 170px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">{{ $user->bio }}</textarea>
-
-                </div>
-
-            </div>
-            <div class="col-md-6">
-
-                <div class="image-upload">
-                    <label for="avatar">
-                        <strong> Change Avatar</strong>
-                        <img class="img-circle" src=" @if(!empty($user->avatar)) {{getenv('API_BASE')}}/{{$user->avatar}} @else {{url("images/avatar-placehodler.png")}} @endif"/>
-                    </label>
-
-                    <input  type="file" id="avatar" name="avatar"/>
-                </div>
-
-
 
 
                 @if($user->id !=1)
@@ -129,6 +131,7 @@
 <script src="{{asset('js/upload.js')}}"></script>
 <script>
 $(function () {
+     $("input[name='password'],input[name='old_password']").val('');
 
     $("select#roles").select2();
     //bootstrap WYSIHTML5 - text editor
@@ -145,7 +148,7 @@ $(function () {
             var extension = e.target.files[0].name.split('.').pop().toLowerCase();
 
             var isSuccess = fileTypes.indexOf(extension) > -1;
-            
+
             if (!isSuccess) {
                 alert("You must upload an image");
                 return;
@@ -155,22 +158,22 @@ $(function () {
             var reader = new FileReader();
 
             reader.onload = function (e) {
-                
+
                 $(input).prev().find("img").attr("src", reader.result);
-                
+
             }
-            
+
             reader.readAsDataURL(e.target.files[0]);
 
             $(input).upload("{{url('/admin/users/upload')}}/{{Request::segment(3)}}", function (success) {
 
-            } , function(prog,value){
+            }, function (prog, value) {
                 console.log(value);
             });
-            
+
         } else {
-            
-           alert("No File Chosen !");
+
+            alert("No File Chosen !");
         }
 
     });

@@ -64,7 +64,7 @@ class UsersController extends Controller {
             'avatar' => Input::file('avatar'),
         ];
 
-        $response = \API::multipart('users/register', $params);
+        $response = \API::post('users/register',[], $params);
 
         if ($response["code"] == "201") {
 
@@ -109,6 +109,8 @@ class UsersController extends Controller {
                     $rolesArray[] = $role->id;
                 }
             }
+        } elseif ($response['code'] == 401) {
+            abort(401);
         }
 
         return \View::make('admin/users/edit')
@@ -147,9 +149,14 @@ class UsersController extends Controller {
             'avatar' => Input::file('avatar'),
         ];
 
+        if (empty(Input::get('password'))) {
+            unset($params['password']);
+            unset($params['old_password']);
+        }
+
         $response = \API::post('users/update/' . $id, ['Authorization' => $request->session()->get('user_data')['auth']], $params);
 
-        
+
         if ($response["code"] == "200") {
 
             $message = $response["data"]->username . ' has been updated';
@@ -222,6 +229,11 @@ class UsersController extends Controller {
                 (array)
                 \API::get('users/dataTables', ['Authorization' => $request->session()->get('user_data')['auth']], array_merge(Input::all(), ['ID' => $request->session()->get('user_id')])
                 )['data'];
+    }
+
+    public function uploadAvatar($id, Request $request) {
+
+        $response = \API::multipart('users/avatar', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id'), 'user_id' => $id, 'avatar' => Input::file('avatar')]);
     }
 
 }

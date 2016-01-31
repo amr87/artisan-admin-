@@ -72,15 +72,6 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label><strong> Avatar</strong></label>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-image"></i></span>
-                        <input type="file"  name="avatar" class="form-control">
-                    </div>
-                </div>
-
-
-                <div class="form-group">
                     <label><strong> Bio</strong></label>
 
                     <textarea name="bio" class="textarea" placeholder="Place some text here" style="width: 100%; height: 170px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">{{ old('bio') }}</textarea>

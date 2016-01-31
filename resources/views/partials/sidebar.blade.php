@@ -40,10 +40,17 @@
                 </ul>
             </li>
             <li class="treeview">
-                <a class="active" href="#"><i class="fa fa-lock"></i> <span>Roles & Permissions </span> <i class="fa fa-angle-left pull-right"></i></a>
+                <a class="active" href="#"><i class="fa fa-lock"></i> <span>Roles  </span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                     <li>  <a href="{{url('admin/roles/')}}"><i class="fa fa-lock"></i> <span> Show Roles </span></a></li>
                     <li>  <a  href="{{url('admin/roles/create')}}"> <i class="fa fa-plus"></i><span> Create Role </span></a></li>
+                </ul>
+            </li>
+            <li class="treeview">
+                <a class="active" href="#"><i class="fa fa-lock"></i> <span>Permissions  </span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li>  <a href="{{url('admin/permissions/')}}"><i class="fa fa-lock"></i> <span> Show Permissions </span></a></li>
+                    <li>  <a  href="{{url('admin/permissions/create')}}"> <i class="fa fa-plus"></i><span> Create Permission </span></a></li>
                 </ul>
             </li>
             @endcheck

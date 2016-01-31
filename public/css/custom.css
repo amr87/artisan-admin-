@@ -5,3 +5,17 @@
 select#roles{
     width:100%;
 }
+
+
+.image-upload > input
+{
+    display: none;
+}
+
+.image-upload img
+{
+    width: 240px;
+    height: 240px;
+    cursor: pointer;
+}
+

@@ -37,9 +37,27 @@ Route::post('/login', ['uses' => 'UsersController@processLogin', 'middleware' =>
 Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
 
     Route::get('/', ['uses' => 'DashboardController@index']);
+
+    /*
+     * Users Route
+     */
+    Route::post('/users/upload/{id}', ['uses' => 'UsersController@uploadAvatar']);
     Route::get('/users/dataTables', ['uses' => 'UsersController@dataTables']);
     Route::get('/users/{id}/delete', ['uses' => 'UsersController@destroy']);
     Route::resource('users', 'UsersController');
-    
-    
+
+
+    /*
+     * Roles Route
+     */
+    Route::get('/roles/dataTables', ['uses' => 'RolesController@dataTables']);
+    Route::get('/roles/{id}/delete', ['uses' => 'RolesController@destroy']);
+    Route::resource('roles', 'RolesController');
+
+    /*
+     * Roles Route
+     */
+    Route::get('/permissions/dataTables', ['uses' => 'PermissionsController@dataTables']);
+    Route::get('/permissions/{id}/delete', ['uses' => 'PermissionsController@destroy']);
+    Route::resource('permissions', 'PermissionsController');
 });

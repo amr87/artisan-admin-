@@ -16,7 +16,8 @@ class ACL {
             return false;
 
         foreach (Session::get('user_data')['roles'] as $role) {
-
+            if($role->name == 'super_admin')
+                self::$can = true;
             if (!empty($role->permissions) && $role->permissions !== NULL) {
 
                 foreach ($role->permissions as $permission) {

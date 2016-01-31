@@ -47,28 +47,12 @@ class APIClient {
         ];
     }
 
-    public function upload($url, $params) {
+    
+    public function multipart($url, $headers, $params) {
 
         $response = $this->client->request(
                 'POST', $url, [
-            "headers" => "Content-Type => multipart/form-data"
-                ], [
-                ], [
-                ]
-                , $params
-        );
-
-        return [
-            'code' => $response->getStatusCode(),
-            'phrase' => $response->getReasonPhrase(),
-            'data' => $this->filter($response->getBody())
-        ];
-    }
-
-    public function multipart($url, $params) {
-
-        $response = $this->client->request(
-                'POST', $url, [
+            "headers" => array_merge($this->headers, $headers),
             "multipart" => $this->setMultipart($params)
                 ]
         );
@@ -81,6 +65,7 @@ class APIClient {
     }
 
     private function filter($data) {
+        
         return json_decode($data);
     }
 
@@ -98,10 +83,9 @@ class APIClient {
             }
             $multipart[] = $item;
         }
-    
-       
+
+
         return $multipart;
     }
-    
+
 }
-    

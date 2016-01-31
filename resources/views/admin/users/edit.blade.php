@@ -47,12 +47,12 @@
                         <input value="{{ $user->email }}" required="" type="email" placeholder="Email" name="email" class="form-control">
                     </div>
                 </div>
-                
-                 <div class="form-group">
+
+                <div class="form-group">
                     <label><strong>Old Password</strong></label>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                        <input  required="" type="password" placeholder="Old Password" name="old_password" class="form-control">
+                        <input   type="password" placeholder="Old Password" name="old_password" class="form-control">
                     </div>
                 </div>
 
@@ -60,7 +60,7 @@
                     <label><strong> New Password</strong></label>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                        <input  required="" type="password" placeholder="New Password" name="password" class="form-control">
+                        <input   type="password" placeholder="New Password" name="password" class="form-control">
                     </div>
                 </div>
 
@@ -81,18 +81,16 @@
 
             </div>
             <div class="col-md-6">
-                @if(!empty($user->avatar))
-                <p class='badge bg-green'><strong> Current Avatar</strong></p>
-                <br/>
-                <img class="img-circle" src='{{getenv('API_BASE')}}/{{$user->avatar}}' width="200" height="200"/>
-                @endif
-                <div class="form-group">
-                    <label><strong> Change Avatar</strong></label>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-image"></i></span>
-                        <input type="file"  name="avatar" class="form-control">
-                    </div>
+
+                <div class="image-upload">
+                    <label for="avatar">
+                        <strong> Change Avatar</strong>
+                        <img class="img-circle" src=" @if(!empty($user->avatar)) {{getenv('API_BASE')}}/{{$user->avatar}} @else {{url("images/avatar-placehodler.png")}} @endif"/>
+                    </label>
+
+                    <input  type="file" id="avatar" name="avatar"/>
                 </div>
+
 
 
 
@@ -128,12 +126,54 @@
 @section('footer_scripts')
 <script src="{{asset('bower_components/AdminLTE/plugins/select2/select2.full.min.js')}}"></script>
 <script src="{{asset('bower_components/AdminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
+<script src="{{asset('js/upload.js')}}"></script>
 <script>
 $(function () {
 
     $("select#roles").select2();
     //bootstrap WYSIHTML5 - text editor
     $(".textarea").wysihtml5();
+
+    $("input#avatar").on('change', function (e) {
+
+        var input = $(this);
+
+        var fileTypes = ['jpg', 'jpeg', 'png', 'gif'];
+
+        if (e.target.files) {
+
+            var extension = e.target.files[0].name.split('.').pop().toLowerCase();
+
+            var isSuccess = fileTypes.indexOf(extension) > -1;
+            
+            if (!isSuccess) {
+                alert("You must upload an image");
+                return;
+            }
+
+
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                
+                $(input).prev().find("img").attr("src", reader.result);
+                
+            }
+            
+            reader.readAsDataURL(e.target.files[0]);
+
+            $(input).upload("{{url('/admin/users/upload')}}/{{Request::segment(3)}}", function (success) {
+
+            } , function(prog,value){
+                console.log(value);
+            });
+            
+        } else {
+            
+           alert("No File Chosen !");
+        }
+
+    });
 });
 </script>
 @endsection

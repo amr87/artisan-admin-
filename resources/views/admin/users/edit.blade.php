@@ -13,7 +13,7 @@
     </div>
     <!-- /.box-header -->
     <div class="box-body">
-        @include('admin/errors')
+        @include('admin/messages')
         <form action="{{url('/admin/users')}}/{{$user->id}}" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="_method" value="PUT" />
             <div class="col-md-6">
@@ -66,7 +66,8 @@
                 <div class="image-upload">
                     <label for="avatar">
                         <strong> Change Avatar</strong>
-                        <img class="img-circle" src=" @if(!empty($user->avatar)) {{getenv('API_BASE')}}/{{$user->avatar}} @else {{url("images/avatar-placehodler.png")}} @endif"/>
+                        <img class="img-circle" src=" @if(!empty($user->avatar)) {{getenv('API_BASE')}}/{{$user->avatar}} @else {{url("images/avatar-placeholder.png")}} @endif"/>
+                        <div class="rolling"></div>
                     </label>
 
                     <input  type="file" id="avatar" name="avatar"/>
@@ -131,12 +132,12 @@
 <script src="{{asset('js/upload.js')}}"></script>
 <script>
 $(function () {
-     $("input[name='password'],input[name='old_password']").val('');
+    $("input[name='password'],input[name='old_password']").val('');
 
     $("select#roles").select2();
     //bootstrap WYSIHTML5 - text editor
     $(".textarea").wysihtml5();
-
+    var reader;
     $("input#avatar").on('change', function (e) {
 
         var input = $(this);
@@ -154,21 +155,26 @@ $(function () {
                 return;
             }
 
-
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-
-                $(input).prev().find("img").attr("src", reader.result);
-
+            var size = ~~(e.target.files[0].size / 1024);
+            
+            if (size > 1024) {
+                alert("You can`t upload image larger than 1 MB");
+                return;
             }
+
+            reader = new FileReader();
 
             reader.readAsDataURL(e.target.files[0]);
 
             $(input).upload("{{url('/admin/users/upload')}}/{{Request::segment(3)}}", function (success) {
-
+                
+                $(input).prev().find("img").attr("src", reader.result);
+                $('img.img-circle,img.user-image').attr("src", reader.result);
+                
+                $('.image-upload .rolling').hide();
+                
             }, function (prog, value) {
-                console.log(value);
+                
             });
 
         } else {

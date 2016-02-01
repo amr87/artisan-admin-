@@ -53,6 +53,9 @@ $.fn.upload = function(remote, data, successFn, progressFn) {
 			data: formData,
 			dataType: "json",
 			cache: false,
+                        beforeSend:function(){
+                            $('.image-upload .rolling').show();
+                        },
 			contentType: false,
 			processData: false,
 			complete: function(res) {

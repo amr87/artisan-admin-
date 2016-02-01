@@ -7,8 +7,7 @@
 @endsection
 
 <div class="box">
-    @include('admin/success')
-    @include('admin/errors')
+    @include('admin/messages')
     <div class="box-header">
 
         @check("manage_users")

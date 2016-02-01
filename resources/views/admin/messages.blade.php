@@ -4,4 +4,8 @@
     <p> {{$error}} </p>
     @endforeach
 </div>
+@elseif(@$success !== NUll)
+<div class="alert alert-success alert-dismissable">
+    <p>{{@$success}}</p>
+</div>
 @endif

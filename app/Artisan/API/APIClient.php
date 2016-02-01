@@ -65,7 +65,7 @@ class APIClient {
     }
 
     private function filter($data) {
-        
+ 
         return json_decode($data);
     }
 

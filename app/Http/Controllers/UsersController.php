@@ -220,6 +220,7 @@ class UsersController extends Controller {
 
             return redirect('/admin/');
         } else {
+            
             return redirect()->back()->with('errors', $response['data']->messages);
         }
     }

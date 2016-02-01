@@ -3,7 +3,7 @@
 <!-- /.login-logo -->
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>
-     @include('admin/errors')
+     @include('admin/messages')
     <form action="{{url('/login')}}" method="post">
       <div class="form-group has-feedback">
           <input required="" type="text" class="form-control" name="username" placeholder="Username">

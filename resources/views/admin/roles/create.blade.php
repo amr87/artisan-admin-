@@ -13,7 +13,7 @@
     </div>
     <!-- /.box-header -->
     <div class="box-body">
-        @include('admin/errors')
+        @include('admin/messages')
         <form action="{{url('/admin/roles/')}}" method="POST" >
             <div class="col-md-6">
 

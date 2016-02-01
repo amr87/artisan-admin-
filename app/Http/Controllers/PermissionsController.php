@@ -30,10 +30,12 @@ class PermissionsController extends Controller {
     public function create(Request $request) {
 
         \Policy::check('manage_users')->handle();
-
+        $response = \API::get('roles', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id'), 'noAdmin' => true]);
+        $roles = $response['code'] == 200 ? $response["data"] : [];
 
         return \View::make('admin/permissions/create')
-                        ->with('page_title', 'Create Permission');
+                        ->with('page_title', 'Create Permission')
+                        ->with('roles', $roles);
     }
 
     /**
@@ -49,6 +51,7 @@ class PermissionsController extends Controller {
         $params = [
             'ID' => $request->session()->get('user_id'),
             'name' => Input::get('name'),
+            'roles' => Input::get('roles')
         ];
 
         $response = \API::post('permissions/create', ['Authorization' => $request->session()->get('user_data')['auth']], $params);
@@ -87,10 +90,22 @@ class PermissionsController extends Controller {
         $response = \API::get('permissions/show/' . $id, ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id')]);
         $permission = $response["code"] == "200" ? $response["data"] : new \stdClass();
 
+        $permissionRoles = [];
+        if ($response['code'] == 200) {
+            if (!empty($permission->role)) {
+                foreach ($permission->role as $role) {
+                    $permissionRoles[] = $role->id;
+                }
+            }
+        }
 
+        $responseRoles = \API::get('roles', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id'), 'noAdmin' => true]);
+        $roles = $responseRoles['code'] == 200 ? $responseRoles["data"] : [];
 
         return \View::make('admin/permissions/edit')
                         ->with('permission', $permission)
+                        ->with('roles', $roles)
+                        ->with('permissionRoles', $permissionRoles)
                         ->with('page_title', 'Update Permission');
     }
 
@@ -109,6 +124,7 @@ class PermissionsController extends Controller {
             'ID' => $request->session()->get('user_id'),
             '_method' => 'PUT',
             'name' => Input::get('name'),
+            'roles' => Input::get('roles')
         ];
 
         $response = \API::post('permissions/update/' . $id, ['Authorization' => $request->session()->get('user_data')['auth']], $params);

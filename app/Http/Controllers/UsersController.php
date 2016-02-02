@@ -230,6 +230,8 @@ class UsersController extends Controller {
                 'avatar' => $avatar,
                 'member_since' => \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $user['created_at'])->format('M. Y'),
             ]);
+            
+            \Redis::publish('user-login',json_encode($response['data']));
 
             return redirect('/admin/');
         } else {

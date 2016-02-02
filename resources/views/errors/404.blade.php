@@ -1,4 +1,7 @@
 @extends('layouts/blank')
+@section('title')
+Administartion | Page Not Found
+@endsection
 @section('content')
 
       <div class="error-page">

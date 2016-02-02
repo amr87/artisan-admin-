@@ -1,4 +1,7 @@
 @extends('layouts/blank')
+@section('title')
+Administartion | Register
+@endsection
 @section('content')
 
   <div class="register-box-body">

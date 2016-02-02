@@ -64,11 +64,11 @@ class UsersController extends Controller {
             'avatar' => Input::file('avatar'),
         ];
 
-        $response = \API::post('users/register',[], $params);
+        $response = \API::post('users/register', [], $params);
 
         if ($response["code"] == "201") {
 
-            return redirect('/admin/users')->with('success', $response["data"]->username . ' has been created');
+            return redirect('/admin/users')->with('success', 'User ' . $response["data"]->username . ' has been created');
         } else {
 
             return redirect()->back()->withInput()->with('errors', $response['data']->messages);
@@ -109,10 +109,9 @@ class UsersController extends Controller {
                     $rolesArray[] = $role->id;
                 }
             }
-        } elseif ($response['code'] == 401) {
-            abort(401);
+        } else {
+            abort($response['code']);
         }
-
         return \View::make('admin/users/edit')
                         ->with('user', $user)
                         ->with('name', $name)
@@ -159,12 +158,14 @@ class UsersController extends Controller {
 
         if ($response["code"] == "200") {
 
-            $message = $response["data"]->username . ' has been updated';
-            return redirect('/admin/users')->with('message', $message);
+            \Policy::flushSession((array) $response["data"]);
+
+            $message = 'User ' . $response["data"]->username . ' has been updated';
+
+            return redirect('/admin/users')->with('success', $message);
         } else {
 
-            $errors = is_object($response['data']) ? $response['data']->messages : [$response['data']['phrase']];
-            return redirect()->back()->with('errors', $errors);
+            return redirect()->back()->with('errors', $response['data']->messages);
         }
     }
 
@@ -180,7 +181,7 @@ class UsersController extends Controller {
             return redirect('/admin/users')->with('errors', ['Sorry , but this user is untouchable :D']);
         $response = \API::post('users/delete/' . $id, ['Authorization' => $request->session()->get('user_data')['auth']], ['_method' => 'DELETE', 'ID' => $request->session()->get('user_id')]);
         if ($response["code"] == "200") {
-            return redirect()->back()->with('success', 'user deleted successfuly');
+            return redirect()->back()->with('success', 'User ' . $response['data']->username . ' deleted successfuly');
         } else {
             return redirect()->back()->with('errors', $response['data']->messages);
         }
@@ -206,8 +207,20 @@ class UsersController extends Controller {
 
         if ($response['code'] == 200) {
             $user = (array) $response['data'];
+            
+            $avatar = url('/images/avatar-placeholder.png');
 
-            $avatar = $user['social'] == "0" ? getenv('API_BASE') . str_replace(".jpg", "-160.jpg", $user['avatar']) : $user['avatar'];
+            if ($user['social'] == "0" && NULL != $user["avatar"]) {
+                
+                $avatar = getenv('API_BASE') . str_replace(".jpg", "-160.jpg", $user['avatar']);
+                
+            } elseif($user["social"] == "1") {
+                
+                $avatar = $user['avatar'];
+                
+            }
+           
+            
             $request->session()->put('user_id', $user['id']);
             $request->session()->put('user_data', [
                 'auth' => $user['token'],
@@ -220,7 +233,7 @@ class UsersController extends Controller {
 
             return redirect('/admin/');
         } else {
-            
+
             return redirect()->back()->with('errors', $response['data']->messages);
         }
     }

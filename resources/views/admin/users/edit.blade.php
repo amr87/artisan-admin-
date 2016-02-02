@@ -156,7 +156,7 @@ $(function () {
             }
 
             var size = ~~(e.target.files[0].size / 1024);
-            
+
             if (size > 1024) {
                 alert("You can`t upload image larger than 1 MB");
                 return;
@@ -167,14 +167,19 @@ $(function () {
             reader.readAsDataURL(e.target.files[0]);
 
             $(input).upload("{{url('/admin/users/upload')}}/{{Request::segment(3)}}", function (success) {
-                
+
                 $(input).prev().find("img").attr("src", reader.result);
-                $('img.img-circle,img.user-image').attr("src", reader.result);
-                
-                $('.image-upload .rolling').hide();
-                
-            }, function (prog, value) {
-                
+
+                var user_id = {{ Request::segment(3)}}
+                var ID = {{Session::get('user_id')}}
+      
+                if (user_id == ID) {
+                    $('img.img-circle,img.user-image').attr("src", reader.result);
+                    }
+                    $('.image-upload .rolling').hide();
+                }
+                , function (prog, value) {
+
             });
 
         } else {

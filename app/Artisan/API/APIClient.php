@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\Input as Input;
 
 class APIClient {
 
-    protected $client;
-    protected $headers = [
+    private $client;
+    private $headers = [
         'Accept' => 'application/json'
     ];
+    private $successCodes = [200, 201];
 
     public function __construct($client) {
 
@@ -25,10 +26,7 @@ class APIClient {
                 ]
         );
 
-        return [
-            'code' => $response->getStatusCode(),
-            'data' => $this->filter($response->getBody())
-        ];
+        return $this->sanitizeResponse($response);
     }
 
     public function post($url, $headers, $params) {
@@ -40,14 +38,9 @@ class APIClient {
                 ]
         );
 
-        return [
-            'code' => $response->getStatusCode(),
-            'phrase' => $response->getReasonPhrase(),
-            'data' => $this->filter($response->getBody())
-        ];
+        return $this->sanitizeResponse($response);
     }
 
-    
     public function multipart($url, $headers, $params) {
 
         $response = $this->client->request(
@@ -57,15 +50,36 @@ class APIClient {
                 ]
         );
 
-        return [
-            'code' => $response->getStatusCode(),
-            'phrase' => $response->getReasonPhrase(),
-            'data' => $this->filter($response->getBody())
-        ];
+        return $this->sanitizeResponse($response);
+    }
+
+    private function sanitizeResponse($response) {
+
+        if (!in_array($response->getStatusCode(), $this->successCodes)) {
+
+            $data = $this->filter($response->getBody());
+
+            if (is_array($data)) {
+                $obj = new \stdClass();
+                $obj->messages = $data;
+            } else {
+                $obj = $data;
+            }
+
+            return [
+                'code' => $response->getStatusCode(),
+                'data' => $obj
+            ];
+        } else {
+            return [
+                'code' => $response->getStatusCode(),
+                'data' => $this->filter($response->getBody())
+            ];
+        }
     }
 
     private function filter($data) {
- 
+
         return json_decode($data);
     }
 

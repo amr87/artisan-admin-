@@ -1,4 +1,7 @@
 @extends('layouts/blank')
+@section('title')
+Administartion | Application Down For Maintenace
+@endsection
 @section('content')
       <div class="error-page">
         <h2 class="headline text-yellow"> Be Right Back</h2>

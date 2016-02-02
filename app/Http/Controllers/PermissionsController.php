@@ -59,7 +59,7 @@ class PermissionsController extends Controller {
 
         if ($response["code"] == "201") {
 
-            return redirect('/admin/permissions')->with('success', $response["data"]->label . ' has been created');
+            return redirect('/admin/permissions')->with('success','Permission '. $response["data"]->label . ' has been created');
         } else {
 
             return redirect()->back()->withInput()->with('errors', $response['data']->messages);
@@ -132,13 +132,13 @@ class PermissionsController extends Controller {
 
         if ($response["code"] == "200") {
 
-            $message = "permission " . $response["data"]->label . ' has been updated';
+            $message = "Permission " . $response["data"]->label . ' has been updated';
 
             return redirect('/admin/permissions')->with('message', $message);
         } else {
 
-            $errors = is_object($response['data']) ? $response['data']->messages : [$response['data']['phrase']];
-            return redirect()->back()->with('errors', $errors);
+     
+            return redirect()->back()->with('errors', $response['data']->messages);
         }
     }
 
@@ -157,7 +157,7 @@ class PermissionsController extends Controller {
         $response = \API::post('permissions/delete/' . $id, ['Authorization' => $request->session()->get('user_data')['auth']], ['_method' => 'DELETE', 'ID' => $request->session()->get('user_id')]);
         if ($response["code"] == "200") {
 
-            return redirect()->back()->with('success', 'permission deleted successfuly');
+            return redirect()->back()->with('success', 'Permission '.$response['data']->label.' deleted successfuly');
         } else {
 
             return redirect()->back()->with('errors', $response['data']->messages);

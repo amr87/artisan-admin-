@@ -1,7 +1,9 @@
 @extends('layouts/default')
 
 @section('content')
-
+@section('header_styles')
+<link rel="stylesheet" type="text/css" href="{{asset('bower_components/AdminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}"/>
+@endsection
 <section class="content">
       <!-- Small boxes (Stat box) -->
       <div class="row">

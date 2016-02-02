@@ -26,7 +26,7 @@
                 </div>
 
 
-                @if(count($permissions) > 0)
+                @if(count($permissions) > 0))
                 <div class="form-group">
                     <label><strong> Permissions</strong></label>
                     <div class="input-group">

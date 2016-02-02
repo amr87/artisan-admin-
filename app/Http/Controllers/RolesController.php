@@ -32,6 +32,7 @@ class RolesController extends Controller {
         \Policy::check('manage_users')->handle();
 
         $response = \API::get('permissions', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id'), 'noAdmin' => true]);
+   
         $permissions = $response['code'] == 200 ? $response["data"] : [];
         return \View::make('admin/roles/create')
                         ->with('permissions', $permissions)
@@ -59,7 +60,7 @@ class RolesController extends Controller {
 
         if ($response["code"] == "201") {
 
-            return redirect('/admin/roles')->with('success', $response["data"]->label . ' has been created');
+            return redirect('/admin/roles')->with('success', "Role ".$response["data"]->label . ' has been created');
         } else {
 
             return redirect()->back()->withInput()->with('errors', $response['data']->messages);
@@ -132,7 +133,7 @@ class RolesController extends Controller {
 
         if ($response["code"] == "200") {
 
-            $message = "role " . $response["data"]->label . ' has been updated';
+            $message = "Role " . $response["data"]->label . ' has been updated';
 
             return redirect('/admin/roles')->with('message', $message);
         } else {
@@ -158,7 +159,7 @@ class RolesController extends Controller {
         $response = \API::post('roles/delete/' . $id, ['Authorization' => $request->session()->get('user_data')['auth']], ['_method' => 'DELETE', 'ID' => $request->session()->get('user_id')]);
         if ($response["code"] == "200") {
 
-            return redirect()->back()->with('success', 'role deleted successfuly');
+            return redirect()->back()->with('success', 'Role '.$response['data']->label.' deleted successfuly');
         } else {
 
             return redirect()->back()->with('errors', $response['data']->messages);

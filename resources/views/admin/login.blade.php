@@ -1,4 +1,7 @@
 @extends('layouts/blank')
+@section('title')
+Administartion | Login
+@endsection
 @section('content')
 <!-- /.login-logo -->
   <div class="login-box-body">

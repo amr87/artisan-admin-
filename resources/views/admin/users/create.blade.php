@@ -81,7 +81,7 @@
 
                 </div>
 
-                @if(count($roles) > 0)
+                @if(count($roles) > 0) 
                 <div class="form-group">
                     <label><strong> Role(s)</strong></label>
                     <div class="input-group">

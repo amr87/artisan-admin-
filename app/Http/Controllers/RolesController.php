@@ -143,11 +143,11 @@ class RolesController extends Controller {
 
             $message = "Role " . $response["data"]->label . ' has been updated';
 
-            return redirect('/admin/roles')->with('message', $message);
+            return redirect('/admin/roles')->with('success', $message);
         } else {
 
-            $errors = is_object($response['data']) ? $response['data']->messages : [$response['data']['phrase']];
-            return redirect()->back()->with('errors', $errors);
+  
+            return redirect()->back()->with('errors', $response['data']->messages);
         }
     }
 

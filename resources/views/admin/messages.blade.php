@@ -4,7 +4,7 @@
         <span aria-hidden="true">&times;</span>
     </button>
     @foreach( session('errors') as $error)
-    <p class="text"> <i class="fa fa-warning"></i> {{$error}} </p>
+    <p class="text"> <i class="fa fa-lg fa-warning"></i> {{$error}} </p>
     @endforeach
 </div>
 @elseif( session('success'))
@@ -12,6 +12,6 @@
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
-    <p class="text"><i class="fa fa-refresh"></i> {{session('success')}}</p>
+    <p class="text"><i class="fa fa-lg fa-check-circle"></i> {{session('success')}}</p>
 </div>
 @endif

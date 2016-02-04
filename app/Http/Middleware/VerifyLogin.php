@@ -16,8 +16,12 @@ class VerifyLogin {
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null) {
-
-        if ($request->getRequestUri() != "/login" && $request->getRequestUri() != "/logout") {
+        if ($request->getRequestUri() != "/login"
+                && $request->getRequestUri() != "/logout" && 
+                $request->path() != "reset-password" 
+                && $request->path() != "facebook/callback"
+                && $request->path() != "facebook"
+                ) {
             if (!Session::has('user_id')) {
                 return redirect('/login');
             } elseif (Session::has('user_id') && $request->getRequestUri() == "/login") {

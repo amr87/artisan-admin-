@@ -92,6 +92,7 @@ class UsersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($id, Request $request) {
+        
         \Policy::check('manage_users')->handle();
 
         $responseRoles = \API::get('roles', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id'), 'noAdmin' => true]);
@@ -112,8 +113,19 @@ class UsersController extends Controller {
         } else {
             abort($response['code']);
         }
+        
+          $avatar = url('/images/avatar-placeholder.png');
+
+            if ($user->social == "0" && NULL != $user->avatar) {
+
+                $avatar = getenv('API_BASE') . str_replace(".jpg", "-160.jpg", $user->avatar);
+            } elseif ($user->social == "1") {
+
+                $avatar = $user->avatar;
+            }
         return \View::make('admin/users/edit')
                         ->with('user', $user)
+                        ->with('avatar', $avatar)
                         ->with('name', $name)
                         ->with('rolesArray', $rolesArray)
                         ->with('roles', $roles)
@@ -188,7 +200,7 @@ class UsersController extends Controller {
             return redirect()->back()->with('errors', $response['data']->messages);
         }
     }
-    
+
     /**
      * Remove the specified resource permenanetly from storage.
      *
@@ -206,8 +218,7 @@ class UsersController extends Controller {
             return redirect()->back()->with('errors', $response['data']->messages);
         }
     }
-    
-    
+
     /**
      * Remove the specified resource permenanetly from storage.
      *
@@ -313,10 +324,10 @@ class UsersController extends Controller {
             }
         }
     }
-    
-    public function trashed( Request $request){
-        
-         \Policy::check('manage_users')->handle();
+
+    public function trashed(Request $request) {
+
+        \Policy::check('manage_users')->handle();
 
         $response = \API::get('roles', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id')]);
         $roles = $response['code'] == 200 ? $response["data"] : [];
@@ -327,11 +338,128 @@ class UsersController extends Controller {
     }
 
     public function trashedDataTables(Request $request) {
-    
+
         return
                 (array)
                 \API::get('users/dataTables/trashed', ['Authorization' => $request->session()->get('user_data')['auth']], array_merge(Input::all(), ['ID' => $request->session()->get('user_id')])
                 )['data'];
+    }
+
+    public function forgetPassword() {
+
+        $email = Input::get('email');
+
+        return (array)
+                \API::post('users/forget-password', [], ['email' => $email]
+                )['data'];
+    }
+
+    public function resetPassword() {
+
+        return \View::make('admin/reset-password');
+    }
+
+    public function processForgetPassword(Request $request) {
+
+        $email = Input::get('email');
+        $token = Input::get('token');
+        $password = Input::get('password');
+        $password_confirmation = Input::get('password_confirmation');
+
+        $response = (array)
+                \API::get('users/reset-password', [], ['email' => $email, 'token' => $token, 'password' => $password, 'password_confirmation' => $password_confirmation]
+        );
+        if ($response["code"] == 200) {
+            $user = (array) $response['data'];
+
+            $avatar = url('/images/avatar-placeholder.png');
+
+            if ($user['social'] == "0" && NULL != $user["avatar"]) {
+
+                $avatar = getenv('API_BASE') . str_replace(".jpg", "-160.jpg", $user['avatar']);
+            } elseif ($user["social"] == "1") {
+
+                $avatar = $user['avatar'];
+            }
+
+
+            $request->session()->put('user_id', $user['id']);
+            $request->session()->put('user_data', [
+                'auth' => $user['token'],
+                'roles' => $user['roles'],
+                'name' => $user['display_name'],
+                'bio' => $user['bio'],
+                'avatar' => $avatar,
+                'member_since' => \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $user['created_at'])->format('M. Y'),
+            ]);
+            return redirect('/admin/')->with('success', 'You have successfuly reset your password');
+        } else {
+
+            return redirect()->back()->with('errors', $response["data"]->messages);
+        }
+    }
+
+    /*
+     * Social Part
+     * 
+     */
+
+    /**
+     * Redirect the user to the GitHub authentication page.
+     *
+     * @return Response
+     */
+    public function redirectToProvider() {
+        return \Socialite::driver('facebook')->scopes(['email', 'public_profile'])->redirect();
+    }
+
+    /**
+     * Obtain the user information from GitHub.
+     *
+     * @return Response
+     */
+    public function handleProviderCallback(Request $request) {
+        
+        if(Input::get('error') != NULL && Input::get('error') == "access_denied"){
+            return redirect('/login')->with('erros',['You have deauthorized facebook']);
+        }
+        $user = \Socialite::driver('facebook')->user();
+
+        $params = [
+            'display_name' => $user->name,
+            'avatar' => $user->avatar,
+            'email' => $user->email
+        ];
+
+        $response = \API::post('users/facebook-connect', [], $params);
+        if ($response['code'] == 200) {
+          
+            $user = (array) $response['data'];
+
+            $avatar = url('/images/avatar-placeholder.png');
+
+            if ($user['social'] == "0" && NULL != $user["avatar"]) {
+
+                $avatar = getenv('API_BASE') . str_replace(".jpg", "-160.jpg", $user['avatar']);
+            } elseif ($user["social"] == "1") {
+
+                $avatar = $user['avatar'];
+            }
+
+
+            $request->session()->put('user_id', $user['id']);
+            $request->session()->put('user_data', [
+                'auth' => $user['token'],
+                'roles' => $user['roles'],
+                'name' => $user['display_name'],
+                'bio' => $user['bio'],
+                'avatar' => $avatar,
+                'member_since' => \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $user['created_at'])->format('M. Y'),
+            ]);
+            return redirect('/admin/')->with('success', 'Welcome To Artisan');
+        } else {
+            return redirect('/login')->with('errors', $response['data']->messages);
+        }
     }
 
 }

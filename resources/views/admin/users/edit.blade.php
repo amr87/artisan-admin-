@@ -66,13 +66,13 @@
                 <div class="image-upload">
                     <label for="avatar">
                         <strong> Change Avatar</strong>
-                        <img class="img-circle" src=" @if(!empty($user->avatar)) {{getenv('API_BASE')}}/{{$user->avatar}} @else {{url("images/avatar-placeholder.png")}} @endif"/>
+                        <img class="img-circle" src="{{$avatar}}"/>
                         <div class="rolling"></div>
                     </label>
 
                     <input  type="file" id="avatar" name="avatar"/>
                 </div>
-
+               @if($user->social == "0")
                 <div class="form-group">
                     <label><strong>Old Password</strong></label>
                     <div class="input-group">
@@ -88,6 +88,7 @@
                         <input   type="password" placeholder="New Password" name="password" class="form-control">
                     </div>
                 </div>
+               @endif
                 <div class="form-group">
                     <label><strong> Phone</strong></label>
                     <div class="input-group">

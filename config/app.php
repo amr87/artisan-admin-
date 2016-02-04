@@ -157,6 +157,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Artisan\API\APIServiceProvider::class,
         Artisan\Policy\PolicyServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
     ],
 
     /*
@@ -204,6 +205,7 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
         'API'       => Artisan\API\API::class,
         'Policy'    => Artisan\Policy\Policy::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
     ],
 

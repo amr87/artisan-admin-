@@ -16,11 +16,31 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+/*
+ * Social Login
+ *  
+ */
+
+Route::get('/facebook',[ 'uses'=> 'UsersController@redirectToProvider', 'middleware' => 'web']);
+Route::get('/facebook/callback', [ 'uses'=>'UsersController@handleProviderCallback', 'middleware' => 'web']);
+
+
+/*
+ * 
+ *  Basic Action
+ */
+
 Route::get('/login', ['uses' => 'UsersController@login', 'middleware' => 'web']);
 
 Route::get('/logout', ['uses' => 'UsersController@logout', 'middleware' => 'web']);
 
 Route::post('/login', ['uses' => 'UsersController@processLogin', 'middleware' => 'web']);
+
+Route::get('/forget-password', ['uses' => 'UsersController@forgetPassword']);
+
+Route::post('/reset-password', ['uses' => 'UsersController@processForgetPassword', 'middleware' => 'web']);
+
+Route::get('/reset-password', ['uses' => 'UsersController@resetPassword', 'middleware' => 'web']);
 
 
 /*

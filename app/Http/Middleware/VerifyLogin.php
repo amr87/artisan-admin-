@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Session;
 
 class VerifyLogin {
 
+    protected $except = ['login', 'logout', 'reset-password', 'facebook', 'facebook/callback'];
+
     /**
      * Handle an incoming request.
      *
@@ -16,18 +18,21 @@ class VerifyLogin {
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null) {
-        if ($request->getRequestUri() != "/login"
-                && $request->getRequestUri() != "/logout" && 
-                $request->path() != "reset-password" 
-                && $request->path() != "facebook/callback"
-                && $request->path() != "facebook"
-                ) {
-            if (!Session::has('user_id')) {
-                return redirect('/login');
-            } elseif (Session::has('user_id') && $request->getRequestUri() == "/login") {
-                return redirect('/admin');
+        if (!$request->ajax()) {
+            if (!in_array($request->path(), $this->except)) {
+                if (!Session::has('user_id')) {
+                    if($request->cookie('laravel_remember')){
+                        $cookie = $request->cookie('laravel_remember');
+                  //     $data = base64_decode($cookie);
+                      // dd($cookie);
+                    }
+                    return redirect('/login');
+                } elseif (Session::has('user_id') && $request->getRequestUri() == "/login") {
+                    return redirect('/admin');
+                }
             }
         }
+
         return $next($request);
     }
 

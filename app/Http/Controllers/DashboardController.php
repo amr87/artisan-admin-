@@ -13,6 +13,6 @@ class DashboardController extends Controller
     
     public function index(){
        
-        return \View::make('admin/dashboard');
+        return \View::make('admin/dashboard')->with('page_title','Dashboard');
     }
 }

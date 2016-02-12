@@ -14,8 +14,8 @@ select#roles,.show-roles select#roles{
     position:absolute;
     top:0;
     left:91px;
-    width:240px;
-    height:240px;
+    width:160px;
+    height:160px;
     background:rgba(255,255,255,0.5) url('../images/rolling.gif') no-repeat center center;
     border-radius: 50%;
     display:none;
@@ -29,8 +29,8 @@ select#roles,.show-roles select#roles{
 
 .image-upload img
 {
-    width: 240px;
-    height: 240px;
+    width: 160px;
+    height: 160px;
     cursor: pointer;
 }
 

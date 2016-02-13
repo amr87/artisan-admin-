@@ -106,8 +106,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <script src="{{asset('bower_components/AdminLTE/bootstrap/js/bootstrap.min.js')}}"></script>
         <!-- Underscore JS -->
         <script src="{{asset('js/underscorejs.min.js')}}"></script>
-        <script src="{{asset('js/socket.io.js')}}"></script>
-        <script src="{{asset('js/receiver.js')}}"></script>
+<!--        <script src="{{asset('js/socket.io.js')}}"></script>
+        <script src="{{asset('js/receiver.js')}}"></script>-->
         <!-- AdminLTE App -->
         <script src="{{asset('bower_components/AdminLTE/dist/js/app.min.js')}}"></script>
         

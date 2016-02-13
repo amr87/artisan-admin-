@@ -21,6 +21,10 @@ select#roles,.show-roles select#roles{
     display:none;
 }
 
+.image-upload .rolling.left-30{
+    left:31px;
+}
+
 
 .image-upload > input
 {
@@ -34,6 +38,9 @@ select#roles,.show-roles select#roles{
     cursor: pointer;
 }
 
+.image-upload img.margin-left-30{
+    margin-left: 30px;
+}
 div.show-roles{
     display:none;
 }

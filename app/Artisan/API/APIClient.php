@@ -88,9 +88,15 @@ class APIClient {
         $multipart = [];
         foreach ($params as $key => $value) {
             if (Input::hasFile($key)) {
+
+                $handle = fopen(Input::file($key)->getRealPath(), 'rb');
+
                 $item["name"] = $key;
                 $item["filename"] = Input::file($key)->getClientOriginalName();
-                $item["contents"] = fopen(Input::file($key)->getRealPath(), 'r');
+                $item["contents"] = fread($handle, filesize(Input::file($key)->getRealPath()));
+                
+                fclose($handle);
+                
             } else {
                 $item["name"] = $key;
                 $item["contents"] = is_array($value) ? json_encode($value) : $value;
@@ -98,7 +104,7 @@ class APIClient {
             $multipart[] = $item;
         }
 
-
+        
         return $multipart;
     }
 

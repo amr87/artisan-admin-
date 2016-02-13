@@ -83,7 +83,22 @@ class UsersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id, Request $request) {
-        //
+
+        $response = \API::get('users/profile/' . $id, ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id')]);
+        $user = $response['code'] == 200 ? $response['data'] : false;
+        $name = ["",""];
+        if ($user) {
+            if (!empty($user->display_name)) {
+                $parts = @explode(" ", $user->display_name);
+                $name = [@$parts[0], @$parts[1]];
+            }
+        }
+        
+        return $user ? \View::make('admin/users/profile')
+                        ->with('page_title', 'Profile')
+                        ->with('user', $user)
+                        ->with('avatar', UsersTrait::getAvatar($user))
+                        ->with('name', $name) : abort(404);
     }
 
     /**
@@ -100,7 +115,8 @@ class UsersController extends Controller {
         $roles = $responseRoles['code'] == 200 ? $responseRoles["data"] : [];
         $response = \API::get('users/profile/' . $id, ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id')]);
         $user = $response["code"] == "200" ? $response["data"] : new \stdClass();
-        $name = $rolesArray = [];
+        $rolesArray = [];
+        $name = ["",""];
         if ($response['code'] == 200) {
             if (!empty($user->display_name)) {
                 $parts = @explode(" ", $user->display_name);
@@ -115,15 +131,7 @@ class UsersController extends Controller {
             abort($response['code']);
         }
 
-        $avatar = url('/images/avatar-placeholder.png');
-
-        if ($user->social == "0" && NULL != $user->avatar) {
-
-            $avatar = getenv('API_BASE') . str_replace(".jpg", "-160.jpg", $user->avatar);
-        } elseif ($user->social == "1") {
-
-            $avatar = $user->avatar;
-        }
+        $avatar = UsersTrait::getAvatar($user);
 
         return \View::make('admin/users/edit')
                         ->with('user', $user)
@@ -143,8 +151,7 @@ class UsersController extends Controller {
      */
     public function update(Request $request, $id) {
 
-        //
-
+        if($request->session()->get('user_id') != $id)
         \Policy::check('manage_users')->handle();
 
         $params = [
@@ -159,7 +166,6 @@ class UsersController extends Controller {
             'phone' => Input::get('phone'),
             'bio' => Input::get('bio'),
             'role' => Input::get('role'),
-            'avatar' => Input::file('avatar'),
         ];
 
         if (empty(Input::get('password'))) {
@@ -182,7 +188,8 @@ class UsersController extends Controller {
 
             $message = 'User ' . $response["data"]->username . ' has been updated';
 
-            return redirect('/admin/users')->with('success', $message);
+            return $response["data"]->id == "1" ?  redirect('/admin/users')->with('success', $message) : redirect()->back()->with('success', $message);
+            
         } else {
 
             return redirect()->back()->with('errors', $response['data']->messages);
@@ -206,7 +213,7 @@ class UsersController extends Controller {
 
         if ($response["code"] == "200") {
 
-            return redirect()->back()->with('success', 'User ' . $response['data']->username . ' deleted successfuly');
+            return redirect()->back()->with('success', 'User ' . $response['data']->username . ' banned successfuly');
         } else {
 
             return redirect()->back()->with('errors', $response['data']->messages);
@@ -270,7 +277,7 @@ class UsersController extends Controller {
 
         $request->session()->forget('user_id');
         $request->session()->forget('user_data');
-        //\Cookie::queue(\Cookie::forget('laravel_remember'));
+        \Cookie::queue(\Cookie::forget('laravel_remember'));
         return redirect('/login');
     }
 
@@ -321,7 +328,8 @@ class UsersController extends Controller {
 
     public function uploadAvatar($id, Request $request) {
 
-        \API::multipart('users/avatar', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id'), 'user_id' => $id, 'avatar' => Input::file('avatar')]);
+       $resposne = \API::multipart('users/avatar', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id'), 'user_id' => $id, 'avatar' => Input::file('avatar')]);
+       
     }
 
     public function saveClient() {
@@ -422,11 +430,15 @@ class UsersController extends Controller {
         if (Input::get('error') != NULL && Input::get('error') == "access_denied") {
             return redirect('/login')->with('erros', ['You have deauthorized facebook']);
         }
+
         $user = \Socialite::driver('facebook')->user();
+
+        $avatar = preg_replace("/\?width=[0-9]*/", "?width=160", $user->avatar_original);
+
 
         $params = [
             'display_name' => $user->name,
-            'avatar' => $user->avatar,
+            'avatar' => $avatar,
             'email' => $user->email
         ];
 
@@ -438,6 +450,7 @@ class UsersController extends Controller {
 
             return redirect('/admin/')->with('success', 'Welcome To Artisan');
         } else {
+
             return redirect('/login')->with('errors', $response['data']->messages);
         }
     }

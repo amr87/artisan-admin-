@@ -13,7 +13,7 @@
 
         @check("manage_users")
         <a href="{{url('admin/users/create')}}" class="btn btn-primary"><span class="fa  fa-user-plus"></span> Add User </a>
-        <a href="{{url('admin/users/trashed')}}" class="btn btn-danger"><span class="fa  fa-trash-o"></span> Banned Users</a>
+        <a href="{{url('admin/users/trashed')}}" class="btn btn-danger"><span class="fa  fa-warning"></span> Banned Users</a>
         @endcheck
     </div>
     <!-- /.box-header -->
@@ -109,7 +109,7 @@ $(function () {
 });
 
  function confirm_delete(){
-     var confirm  = window.confirm("Are you sure you want to delete this user ?");
+     var confirm  = window.confirm("Are you sure you want to ban this user ?");
      return confirm ? true : false;
  }
 </script>

@@ -41,9 +41,9 @@
                     <li>
                         <a href="#"><i class="fa fa-user"></i> Users <i class="fa fa-angle-left pull-right"></i></a>
                         <ul class="treeview-menu">
-                            <li>  <a href="{{url('admin/users')}}"><i class="fa fa-user-md"></i> <span> Show Users </span></a></li>
+                            <li>  <a href="{{url('admin/users')}}"><i class="fa fa-user"></i> <span> Show Users </span></a></li>
                             <li>  <a  href="{{url('admin/users/create')}}"> <i class="fa fa-user-plus"></i><span> Create User </span></a></li>
-                            <li>  <a  href="{{url('admin/users/trashed')}}"> <i class="fa fa-trash-o"></i><span> Trashed Users </span></a></li>
+                            <li>  <a  href="{{url('admin/users/trashed')}}"> <i class="fa fa-warning"></i><span> Banned Users </span></a></li>
                         </ul>
                     </li>
 
@@ -66,18 +66,28 @@
 
                 </ul>
             </li>
-               </ul>
-            @endcheck
-            
-            
-            @check("manage_news")
-            <li><a href="{{url('admin/news')}}"><i class="fa fa-newspaper-o"></i> <span>News</span></a></li>
-            @endcheck     
+            <li>
+                <a href="#"><i class="fa fa-eye"></i> Throttling <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li>  <a href="{{url('admin/throttling/logins')}}"><i class="fa fa-key"></i> <span> Login Throttling </span></a></li>
+                    <li>  <a  href="{{url('admin/throttling/api')}}"> <i class="fa fa-gear"></i><span> API Throttling </span></a></l
+                </ul>
+            </li>
 
-            @check("manage_places")
-            <li ><a href="{{url('admin/places')}}"><i class="fa fa-map-marker"></i>Places<span></span></a></li>
-            @endcheck
-            
+        </ul>
+        </li>
+        </ul>
+        @endcheck
+
+
+        @check("manage_news")
+        <li><a href="{{url('admin/news')}}"><i class="fa fa-newspaper-o"></i> <span>News</span></a></li>
+        @endcheck     
+
+        @check("manage_places")
+        <li ><a href="{{url('admin/places')}}"><i class="fa fa-map-marker"></i>Places<span></span></a></li>
+        @endcheck
+
         </ul>
         <!-- /.sidebar-menu -->
     </section>

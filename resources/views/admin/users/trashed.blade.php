@@ -4,6 +4,8 @@
 
 @section('header_styles')
 <link rel="stylesheet" type="text/css" href="{{asset('bower_components/AdminLTE/plugins/select2/select2.min.css')}}"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href=" https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css"/>
 @endsection
 
 <div class="box">
@@ -29,7 +31,7 @@
 
         @endif
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <table id="trsahedUsers" class="table table-striped table-bordered">
+            <table id="trsahedUsers" class=" display responsive nowrap" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Username</th>
@@ -41,9 +43,6 @@
 
                     </tr>
                 </thead>
-                <tbody>
-
-                </tbody>
                 <tfoot>
                     <tr>
                         <th>Username</th>
@@ -64,8 +63,8 @@
 <!-- /.box -->
 <!-- DataTables -->
 @section('footer_scripts')
-<script src="{{asset('bower_components/AdminLTE/plugins/datatables/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js')}}"></script>
+<script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('bower_components/AdminLTE/plugins/select2/select2.full.min.js')}}"></script>
 <script>
 $(function () {

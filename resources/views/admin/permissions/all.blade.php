@@ -49,9 +49,8 @@
 <!-- DataTables -->
 @section('footer_scripts')
 <script src="{{asset('bower_components/AdminLTE/plugins/datatables/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js')}}"></script>
 <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.0.2/js/responsive.bootstrap.min.js"></script>
+
 <script>
 $(function () {
 
@@ -61,7 +60,6 @@ $(function () {
         "searching": true,
         "ordering": true,
         "info": true,
-        responsive: true,
         processing: true,
         serverSide: true,
         ajax: {

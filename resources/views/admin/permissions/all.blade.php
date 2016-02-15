@@ -28,9 +28,6 @@
 
                     </tr>
                 </thead>
-                <tbody>
-
-                </tbody>
                 <tfoot>
                     <tr>
                         <th>Label</th>

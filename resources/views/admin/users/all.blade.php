@@ -46,9 +46,6 @@
 
                     </tr>
                 </thead>
-                <tbody>
-
-                </tbody>
                 <tfoot>
                     <tr>
                         <th>Username</th>

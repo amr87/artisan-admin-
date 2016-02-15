@@ -19,7 +19,7 @@
     <!-- /.box-header -->
     <div class="box-body">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <table id="permissions" class="table table-striped table-bordered display responsive nowrap" cellspacing="0" width="100%">
+            <table id="permissions" class="display responsive nowrap" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Label</th>

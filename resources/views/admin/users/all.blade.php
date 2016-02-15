@@ -34,7 +34,7 @@
 
         @endif
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <table id="users" class="table table-striped table-bordered display responsive nowrap" cellspacing="0" width="100%">
+            <table id="users" class=" display responsive nowrap" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Username</th>

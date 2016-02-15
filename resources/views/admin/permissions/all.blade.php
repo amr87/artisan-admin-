@@ -60,7 +60,7 @@ $(function () {
         "searching": true,
         "ordering": true,
         "info": true,
-        "responsive": true,
+        responsive: true,
         processing: true,
         serverSide: true,
         ajax: {

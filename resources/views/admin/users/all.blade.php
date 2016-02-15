@@ -84,7 +84,7 @@ $(function () {
         "searching": true,
         "ordering": true,
         "info": true,
-        "responsive": true,
+        responsive: true,
         processing: true,
         serverSide: true,
         ajax: {
@@ -110,10 +110,10 @@ $(function () {
 
 });
 
- function confirm_delete(){
-     var confirm  = window.confirm("Are you sure you want to ban this user ?");
-     return confirm ? true : false;
- }
+function confirm_delete() {
+    var confirm = window.confirm("Are you sure you want to ban this user ?");
+    return confirm ? true : false;
+}
 </script>
 @endsection
 @endsection

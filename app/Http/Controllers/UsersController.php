@@ -188,7 +188,7 @@ class UsersController extends Controller {
 
             $message = 'User ' . $response["data"]->username . ' has been updated';
 
-            return $response["data"]->id == "1" ?  redirect('/admin/users')->with('success', $message) : redirect()->back()->with('success', $message);
+            return $request->session()->get('user_id') == "1" ?  redirect('/admin/users')->with('success', $message) : redirect()->back()->with('success', $message);
             
         } else {
 

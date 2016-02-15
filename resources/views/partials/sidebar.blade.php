@@ -66,13 +66,13 @@
 
                 </ul>
             </li>
-            <li>
+<!--            <li>
                 <a href="#"><i class="fa fa-eye"></i> Throttling <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                     <li>  <a href="{{url('admin/throttling/logins')}}"><i class="fa fa-key"></i> <span> Login Throttling </span></a></li>
                     <li>  <a  href="{{url('admin/throttling/api')}}"> <i class="fa fa-gear"></i><span> API Throttling </span></a></li>
                 </ul>
-            </li>
+            </li>-->
 
         </ul>
         </li>

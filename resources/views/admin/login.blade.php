@@ -12,7 +12,7 @@ Administartion | Login
             </div>
             <div class="modal-body">
                 <p class="wait-rest text hidden"> Please Wait ... 
-                <img class="img-circle" src="{{ url('images/rolling.gif')}}" width="30" height="30"/>
+                      <i class="fa fa-refresh fa-spin"></i>
                 </p>
                 <p class="success-rest text hidden"> <i class="fa fa-lg fa-check-circle text-green"></i> Please check your inbox for rest link </p>
                 <p class="error-rest text hidden"> <i class="fa fa-lg fa-warning text-red"></i> This email is not recognized , please provide a valid email </p>

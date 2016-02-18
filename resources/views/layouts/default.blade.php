@@ -14,6 +14,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <link rel="stylesheet" href="{{asset('bower_components/AdminLTE/bootstrap/css/bootstrap.min.css')}}">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <!-- Toastr -->
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+
         <!-- Ionicons -->
         <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
         <!-- Theme style -->
@@ -24,6 +27,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         -->
         <link rel="stylesheet" href="{{asset('bower_components/AdminLTE/dist/css/skins/skin-blue.min.css')}}">
         <link rel="stylesheet" href="{{asset('css/custom.css')}}">
+
         @yield('header_styles')
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -98,30 +102,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         <!-- ./wrapper -->
 
+
+
         <!-- REQUIRED JS SCRIPTS -->
 
         <!-- jQuery 2.1.4 -->
         <script src="{{asset('bower_components/AdminLTE/plugins/jQuery/jQuery-2.1.4.min.js')}}"></script>
+
         <!-- Bootstrap 3.3.5 -->
         <script src="{{asset('bower_components/AdminLTE/bootstrap/js/bootstrap.min.js')}}"></script>
+
         <!-- Underscore JS -->
         <script src="{{asset('js/underscorejs.min.js')}}"></script>
+
+        <!-- TOASTR -->
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+
+        <!-- SOCKET IO -->
         <script src="{{asset('js/socket.io.js')}}"></script>
         <script>
-        var socket = new io.connect("{{getenv('SOCKET_URL')}}");
+var socket = new io.connect("{{getenv('SOCKET_URL')}}");
         </script>
         <script src="{{asset('js/receiver.js')}}"></script>
         @if(Session::get('user_id'))
-            <script>
-                socket.on('connect', function () {
-                        socket.emit('sendId', {id: "{{ Session::get('user_id') }}"});
-                });
-            </script>
+        <script>
+socket.on('connect', function () {
+    socket.emit('sendId', {id: "{{ Session::get('user_id') }}"});
+});
+        </script>
         @endif
         <!-- AdminLTE App -->
         <script src="{{asset('bower_components/AdminLTE/dist/js/app.min.js')}}"></script>
 
         @yield('footer_scripts')
-
+        <!-- Overlay -->
+        <div class='overlay-update'>
+            <h1><i class='fa fa-spinner fa-spin'></i> Admin Has Changed Your Account Settings , please wait a moment</h1>
+        </div>
+        <!-- Overlay -->
     </body>
 </html>

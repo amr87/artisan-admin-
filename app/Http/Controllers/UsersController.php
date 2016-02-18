@@ -70,6 +70,7 @@ class UsersController extends Controller {
         if ($response["code"] == "201") {
 
             return redirect('/admin/users')->with('success', 'User ' . $response["data"]->username . ' has been created');
+            
         } else {
 
             return redirect()->back()->withInput()->with('errors', $response['data']->messages);
@@ -89,8 +90,9 @@ class UsersController extends Controller {
         $name = ["",""];
         if ($user) {
             if (!empty($user->display_name)) {
-                $parts = @explode(" ", $user->display_name);
-                $name = [@$parts[0], @$parts[1]];
+                $parts = explode(" ", $user->display_name);
+                $name[0] = isset($parts[0]) ? $parts[0]: "";
+                $name[1] = isset($parts[1]) ? $parts[1]: "";
             }
         }
         
@@ -183,6 +185,7 @@ class UsersController extends Controller {
             if ($client) {
 
                 $response['data']->client_id = $client;
+                
                 \Redis::publish('user-update', json_encode($response["data"]));
             }
 
@@ -214,6 +217,8 @@ class UsersController extends Controller {
         if ($response["code"] == "200") {
 
             return redirect()->back()->with('success', 'User ' . $response['data']->username . ' banned successfuly');
+            
+            
         } else {
 
             return redirect()->back()->with('errors', $response['data']->messages);
@@ -279,6 +284,7 @@ class UsersController extends Controller {
         $request->session()->forget('user_data');
         \Cookie::queue(\Cookie::forget('laravel_remember'));
         return redirect('/login');
+        
     }
 
     public function processLogin(Request $request) {
@@ -333,7 +339,7 @@ class UsersController extends Controller {
 
     public function saveClient() {
 
-           echo json_encode(UsersTrait::saveClient());
+          UsersTrait::saveClient();
     }
 
     public function trashed(Request $request) {
@@ -357,11 +363,8 @@ class UsersController extends Controller {
     }
 
     public function forgetPassword() {
-
-        $email = Input::get('email');
-
         return (array)
-                \API::post('users/forget-password', [], ['email' => $email]
+                \API::post('users/forget-password', [], ['email' => Input::get('email')]
                 )['data'];
     }
 
@@ -372,13 +375,8 @@ class UsersController extends Controller {
 
     public function processForgetPassword(Request $request) {
 
-        $email = Input::get('email');
-        $token = Input::get('token');
-        $password = Input::get('password');
-        $password_confirmation = Input::get('password_confirmation');
-
         $response = (array)
-                \API::get('users/reset-password', [], ['email' => $email, 'token' => $token, 'password' => $password, 'password_confirmation' => $password_confirmation]
+                \API::get('users/reset-password', [], ['email' =>  Input::get('email'), 'token' => Input::get('token'), 'password' => Input::get('password'), 'password_confirmation' =>  Input::get('password_confirmation')]
         );
 
         if ($response["code"] == 200) {
@@ -386,6 +384,7 @@ class UsersController extends Controller {
             UsersTrait::flushSession((array) $response['data']);
 
             return redirect('/admin/')->with('success', 'You have successfuly reset your password');
+            
         } else {
 
             return redirect()->back()->with('errors', $response["data"]->messages);
@@ -415,7 +414,9 @@ class UsersController extends Controller {
     public function handleProviderCallback(Request $request) {
 
         if (Input::get('error') != NULL && Input::get('error') == "access_denied") {
+            
             return redirect('/login')->with('erros', ['You have deauthorized facebook']);
+            
         }
 
         $user = \Socialite::driver('facebook')->user();
@@ -436,6 +437,7 @@ class UsersController extends Controller {
             UsersTrait::flushSession((array) $response['data']);
 
             return redirect('/admin/')->with('success', 'Welcome To Artisan');
+            
         } else {
 
             return redirect('/login')->with('errors', $response['data']->messages);

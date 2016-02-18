@@ -1,15 +1,21 @@
 
 socket.on('user-login', function (data) {
-    $.get('/admin/users/saveClient', data, function (response) {
 
-    });
+    $.get('/admin/users/saveClient', data, function () {});
+
 });
 
 socket.on('user-update', function (data) {
+
     var data = JSON.parse(data);
-    var success = false;
+    $('body').css('overflow', 'hidden');
+    $('.overlay-update').fadeIn('slow');
     $.post('/admin/users/flushSession', data, function () {});
-    
-         window.location.reload();
+
+    // toastr.info('Are you the 6 fingered man?')
+    window.setTimeout(function () {
+        window.location.reload();
+    }, 3000);
 
 });
+

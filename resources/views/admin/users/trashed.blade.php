@@ -4,8 +4,8 @@
 
 @section('header_styles')
 <link rel="stylesheet" type="text/css" href="{{asset('bower_components/AdminLTE/plugins/select2/select2.min.css')}}"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css"/>
 <link rel="stylesheet" type="text/css" href=" https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="{{asset('bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap.css')}}"/>
 @endsection
 
 <div class="box">
@@ -31,7 +31,7 @@
 
         @endif
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <table id="trsahedUsers" class=" display responsive nowrap" cellspacing="0" width="100%">
+            <table id="trsahedUsers" class=" display responsive nowrap  table table-bordered table-hover" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Username</th>
@@ -65,6 +65,8 @@
 @section('footer_scripts')
 <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>
+<script src="{{asset('bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js')}}"></script>
+
 <script src="{{asset('bower_components/AdminLTE/plugins/select2/select2.full.min.js')}}"></script>
 <script>
 $(function () {

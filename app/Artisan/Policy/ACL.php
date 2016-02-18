@@ -19,14 +19,14 @@ class ACL {
 
         foreach (Session::get('user_data')['roles'] as $role) {
 
-            if ($role->name == 'super_admin')
+            if ($role['name'] == 'super_admin')
                 self::$can = true;
 
-            if (!empty($role->permissions) && $role->permissions !== NULL) {
+            if (!empty($role['permissions']) && $role['permissions'] !== NULL) {
 
-                foreach ($role->permissions as $permission) {
+                foreach ($role['permissions'] as $permission) {
 
-                    if ($permission->name == $ability)
+                    if ($permission ['name'] == $ability)
                         self::$can = true;
                 }
             }

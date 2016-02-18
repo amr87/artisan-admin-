@@ -14,6 +14,7 @@ namespace App;
  * @author amr
  */
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Input as Input;
 
 trait UsersTrait {
 
@@ -22,14 +23,17 @@ trait UsersTrait {
         if (!is_array($user) || empty($user))
             return;
 
+
         $avatar = self::getAvatar($user);
 
         Session::put('user_id', $user['id']);
-
+        
+        $roles = json_encode($user['roles']);
+        
         Session::put('user_data', [
             'auth' => $user['token'],
-            'roles' => $user['roles'],
             'name' => $user['display_name'],
+            'roles' => json_decode($roles, true),
             'bio' => $user['bio'],
             'avatar' => $avatar,
             'member_since' => \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $user['created_at'])->format('M. Y'),
@@ -47,9 +51,9 @@ trait UsersTrait {
 
     public static function getClientId($user_id) {
 
-        $data = \DB::table('users')->where('user_id', '=', $user_id)->select('client_id')->get();
-        if (!empty($data) && is_object($data)) {
-            return $data->client_id;
+        $data = \App\User::where('user_id', $user_id)->get();
+        if (!empty($data->toArray()) && $data instanceof \Illuminate\Database\Eloquent\Collection) {
+            return $data[0]->client_id;
         }
         return false;
     }
@@ -66,8 +70,26 @@ trait UsersTrait {
 
             $avatar = $user['avatar'];
         }
-        
+
         return $avatar;
+    }
+
+    public static function saveClient() {
+        $user_id = Input::get('user_id');
+        $client_id = Input::get('client_id');
+        if (($user_id != NULL && !empty($user_id)) && ($client_id != NULL && !empty($client_id))) {
+            $user = \DB::table('users')->where('user_id', $user_id)->get();
+            if (empty($user)) {
+                $user = \DB::table('users')->insert([
+                    'user_id' => $user_id,
+                    'client_id' => $client_id
+                ]);
+            } else {
+                \DB::table('users')->where('user_id', $user_id)->update(['client_id' => $client_id]);
+            }
+        }
+
+        return $user;
     }
 
 }

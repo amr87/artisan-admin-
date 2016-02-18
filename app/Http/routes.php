@@ -61,6 +61,7 @@ Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
     /*
      * Users Route
      */
+    Route::post('/users/flushSession', ['uses' => 'UsersController@flushSession']);
     Route::get('/users/trashedDataTables', ['uses' => 'UsersController@trashedDataTables']);
     Route::get('/users/dataTables', ['uses' => 'UsersController@dataTables']);
     Route::get('/users/saveClient', ['uses' => 'UsersController@saveClient']);

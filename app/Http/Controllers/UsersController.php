@@ -179,7 +179,7 @@ class UsersController extends Controller {
         if ($response["code"] == "200") {
 
             $client = UsersTrait::getClientId($response['data']->id);
-
+  
             if ($client) {
 
                 $response['data']->client_id = $client;
@@ -318,35 +318,22 @@ class UsersController extends Controller {
 
     public function search(Request $request) {
 
-        $keyword = Input::get('q');
-
         return
                 (array)
-                \API::get('users/search', ['Authorization' => $request->session()->get('user_data')['auth']], array_merge(Input::all(), ['ID' => $request->session()->get('user_id'), 'keyword' => $keyword])
+                \API::get('users/search', ['Authorization' => $request->session()->get('user_data')['auth']], array_merge(Input::all(), ['ID' => $request->session()->get('user_id'), 'keyword' =>  Input::get('q')])
                 )['data'];
+        
     }
 
     public function uploadAvatar($id, Request $request) {
 
-       $resposne = \API::multipart('users/avatar', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id'), 'user_id' => $id, 'avatar' => Input::file('avatar')]);
+        \API::multipart('users/avatar', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id'), 'user_id' => $id, 'avatar' => Input::file('avatar')]);
        
     }
 
     public function saveClient() {
 
-        $user_id = Input::get('user_id');
-        $client_id = Input::get('client_id');
-        if (($user_id != NULL && !empty($user_id)) && ($client_id != NULL && !empty($client_id))) {
-            $user = \DB::table('users')->where('user_id', $user_id)->get();
-            if (empty($user)) {
-                \DB::table('users')->insert([
-                    'user_id' => $user_id,
-                    'client_id' => $client_id
-                ]);
-            } else {
-                \DB::table('users')->where('user_id', $user_id)->update(['client_id' => $client_id]);
-            }
-        }
+           echo json_encode(UsersTrait::saveClient());
     }
 
     public function trashed(Request $request) {
@@ -453,6 +440,12 @@ class UsersController extends Controller {
 
             return redirect('/login')->with('errors', $response['data']->messages);
         }
+    }
+    
+    public function flushSession() {
+        
+        UsersTrait::flushSession(Input::all());
+        
     }
 
 }

@@ -67,7 +67,9 @@
                     <label for="avatar">
                         <strong> Change Avatar</strong>
                         <img class="img-circle" src="{{$avatar}}"/>
-                        <div class="rolling"></div>
+                        <div class="rolling">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
                     </label>
 
                     <input  type="file" id="avatar" name="avatar"/>

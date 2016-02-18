@@ -18,7 +18,9 @@
                     <label for="avatar">
                        
                         <img class="img-circle margin-left-30" src="{{$avatar}}"/>
-                        <div class="rolling left-30"></div>
+                        <div class="rolling left-30">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
                     </label>
 
                     <input  type="file" id="avatar" name="avatar"/>

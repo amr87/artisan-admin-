@@ -70,7 +70,6 @@ class UsersController extends Controller {
         if ($response["code"] == "201") {
 
             return redirect('/admin/users')->with('success', 'User ' . $response["data"]->username . ' has been created');
-            
         } else {
 
             return redirect()->back()->withInput()->with('errors', $response['data']->messages);
@@ -87,15 +86,15 @@ class UsersController extends Controller {
 
         $response = \API::get('users/profile/' . $id, ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id')]);
         $user = $response['code'] == 200 ? $response['data'] : false;
-        $name = ["",""];
+        $name = ["", ""];
         if ($user) {
             if (!empty($user->display_name)) {
                 $parts = explode(" ", $user->display_name);
-                $name[0] = isset($parts[0]) ? $parts[0]: "";
-                $name[1] = isset($parts[1]) ? $parts[1]: "";
+                $name[0] = isset($parts[0]) ? $parts[0] : "";
+                $name[1] = isset($parts[1]) ? $parts[1] : "";
             }
         }
-        
+
         return $user ? \View::make('admin/users/profile')
                         ->with('page_title', 'Profile')
                         ->with('user', $user)
@@ -118,7 +117,7 @@ class UsersController extends Controller {
         $response = \API::get('users/profile/' . $id, ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id')]);
         $user = $response["code"] == "200" ? $response["data"] : new \stdClass();
         $rolesArray = [];
-        $name = ["",""];
+        $name = ["", ""];
         if ($response['code'] == 200) {
             if (!empty($user->display_name)) {
                 $parts = @explode(" ", $user->display_name);
@@ -153,8 +152,8 @@ class UsersController extends Controller {
      */
     public function update(Request $request, $id) {
 
-        if($request->session()->get('user_id') != $id)
-        \Policy::check('manage_users')->handle();
+        if ($request->session()->get('user_id') != $id)
+            \Policy::check('manage_users')->handle();
 
         $params = [
             'ID' => $request->session()->get('user_id'),
@@ -179,20 +178,22 @@ class UsersController extends Controller {
 
 
         if ($response["code"] == "200") {
+            
+            if ($request->session()->get('user_id') != $id) {
 
-            $client = UsersTrait::getClientId($response['data']->id);
-  
-            if ($client) {
+                $client = UsersTrait::getClientId($response['data']->id);
 
-                $response['data']->client_id = $client;
-                
-                \Redis::publish('user-update', json_encode($response["data"]));
+                if ($client) {
+
+                    $response['data']->client_id = $client;
+
+                    \Redis::publish('user-update', json_encode($response["data"]));
+                }
             }
 
             $message = 'User ' . $response["data"]->username . ' has been updated';
 
-            return $request->session()->get('user_id') == "1" ?  redirect('/admin/users')->with('success', $message) : redirect()->back()->with('success', $message);
-            
+            return $request->session()->get('user_id') == "1" ? redirect('/admin/users')->with('success', $message) : redirect()->back()->with('success', $message);
         } else {
 
             return redirect()->back()->with('errors', $response['data']->messages);
@@ -217,8 +218,6 @@ class UsersController extends Controller {
         if ($response["code"] == "200") {
 
             return redirect()->back()->with('success', 'User ' . $response['data']->username . ' banned successfuly');
-            
-            
         } else {
 
             return redirect()->back()->with('errors', $response['data']->messages);
@@ -284,7 +283,6 @@ class UsersController extends Controller {
         $request->session()->forget('user_data');
         \Cookie::queue(\Cookie::forget('laravel_remember'));
         return redirect('/login');
-        
     }
 
     public function processLogin(Request $request) {
@@ -326,20 +324,18 @@ class UsersController extends Controller {
 
         return
                 (array)
-                \API::get('users/search', ['Authorization' => $request->session()->get('user_data')['auth']], array_merge(Input::all(), ['ID' => $request->session()->get('user_id'), 'keyword' =>  Input::get('q')])
+                \API::get('users/search', ['Authorization' => $request->session()->get('user_data')['auth']], array_merge(Input::all(), ['ID' => $request->session()->get('user_id'), 'keyword' => Input::get('q')])
                 )['data'];
-        
     }
 
     public function uploadAvatar($id, Request $request) {
 
         \API::multipart('users/avatar', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $request->session()->get('user_id'), 'user_id' => $id, 'avatar' => Input::file('avatar')]);
-       
     }
 
     public function saveClient() {
 
-          UsersTrait::saveClient();
+        UsersTrait::saveClient();
     }
 
     public function trashed(Request $request) {
@@ -376,7 +372,7 @@ class UsersController extends Controller {
     public function processForgetPassword(Request $request) {
 
         $response = (array)
-                \API::get('users/reset-password', [], ['email' =>  Input::get('email'), 'token' => Input::get('token'), 'password' => Input::get('password'), 'password_confirmation' =>  Input::get('password_confirmation')]
+                \API::get('users/reset-password', [], ['email' => Input::get('email'), 'token' => Input::get('token'), 'password' => Input::get('password'), 'password_confirmation' => Input::get('password_confirmation')]
         );
 
         if ($response["code"] == 200) {
@@ -384,7 +380,6 @@ class UsersController extends Controller {
             UsersTrait::flushSession((array) $response['data']);
 
             return redirect('/admin/')->with('success', 'You have successfuly reset your password');
-            
         } else {
 
             return redirect()->back()->with('errors', $response["data"]->messages);
@@ -414,9 +409,8 @@ class UsersController extends Controller {
     public function handleProviderCallback(Request $request) {
 
         if (Input::get('error') != NULL && Input::get('error') == "access_denied") {
-            
+
             return redirect('/login')->with('erros', ['You have deauthorized facebook']);
-            
         }
 
         $user = \Socialite::driver('facebook')->user();
@@ -437,17 +431,15 @@ class UsersController extends Controller {
             UsersTrait::flushSession((array) $response['data']);
 
             return redirect('/admin/')->with('success', 'Welcome To Artisan');
-            
         } else {
 
             return redirect('/login')->with('errors', $response['data']->messages);
         }
     }
-    
+
     public function flushSession() {
-        
+
         UsersTrait::flushSession(Input::all());
-        
     }
 
 }

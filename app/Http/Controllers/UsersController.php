@@ -178,7 +178,7 @@ class UsersController extends Controller {
 
 
         if ($response["code"] == "200") {
-            
+
             if ($request->session()->get('user_id') != $id) {
 
                 $client = UsersTrait::getClientId($response['data']->id);
@@ -216,6 +216,18 @@ class UsersController extends Controller {
         $response = \API::post('users/delete/' . $id, ['Authorization' => $request->session()->get('user_data')['auth']], ['_method' => 'DELETE', 'ID' => $request->session()->get('user_id')]);
 
         if ($response["code"] == "200") {
+
+            if ($request->session()->get('user_id') != $id) {
+
+                $client = UsersTrait::getClientId($response['data']->id);
+
+                if ($client) {
+
+                    $response['data']->client_id = $client;
+
+                    \Redis::publish('user-ban', json_encode($response["data"]));
+                }
+            }
 
             return redirect()->back()->with('success', 'User ' . $response['data']->username . ' banned successfuly');
         } else {

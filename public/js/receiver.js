@@ -15,7 +15,20 @@ socket.on('user-update', function (data) {
     // toastr.info('Are you the 6 fingered man?')
     window.setTimeout(function () {
         window.location.reload();
-    }, 3000);
+    }, 5000);
+
+});
+
+socket.on('user-ban', function (data) {
+
+    var data = JSON.parse(data);
+    $('body').css('overflow', 'hidden');
+    $('.overlay-ban').fadeIn('slow');
+
+    // toastr.info('Are you the 6 fingered man?')
+    window.setTimeout(function () {
+        window.location.href="/logout";
+    }, 5000);
 
 });
 

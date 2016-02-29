@@ -14,8 +14,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <link rel="stylesheet" href="{{asset('bower_components/AdminLTE/bootstrap/css/bootstrap.min.css')}}">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-        <!-- Toastr -->
-        <link href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 
         <!-- Ionicons -->
         <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
@@ -85,7 +83,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                     <!-- Your Page Content Here -->
                     @yield('content')
-
+                    <div class="test"></div>
                 </section>
                 <!-- /.content -->
             </div>
@@ -115,21 +113,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Underscore JS -->
         <script src="{{asset('js/underscorejs.min.js')}}"></script>
 
-        <!-- TOASTR -->
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-
 
         <!-- SOCKET IO -->
         <script src="{{asset('js/socket.io.js')}}"></script>
         <script>
-var socket = new io.connect("{{getenv('SOCKET_URL')}}");
+            var socket = new io.connect("{{getenv('SOCKET_URL')}}",{reconnect: true});
         </script>
         <script src="{{asset('js/receiver.js')}}"></script>
         @if(Session::get('user_id'))
         <script>
-socket.on('connect', function () {
-    socket.emit('sendId', {id: "{{ Session::get('user_id') }}"});
-});
+            socket.on('connect', function () {
+                socket.emit('sendId', {id: "{{ Session::get('user_id') }}" , name: "{{ Session::get('user_data')['username']}}"});
+            });
         </script>
         @endif
         <!-- AdminLTE App -->

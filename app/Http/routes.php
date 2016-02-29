@@ -61,6 +61,7 @@ Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
     /*
      * Users Route
      */
+
     Route::post('/users/flushSession', ['uses' => 'UsersController@flushSession']);
     Route::get('/users/trashedDataTables', ['uses' => 'UsersController@trashedDataTables']);
     Route::get('/users/dataTables', ['uses' => 'UsersController@dataTables']);
@@ -82,7 +83,7 @@ Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
     Route::resource('roles', 'RolesController');
 
     /*
-     * Roles Route
+     * Permissions Route
      */
     Route::get('/permissions/dataTables', ['uses' => 'PermissionsController@dataTables']);
     Route::get('/permissions/{id}/delete', ['uses' => 'PermissionsController@destroy']);

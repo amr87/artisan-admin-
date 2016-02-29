@@ -15,6 +15,7 @@ namespace App;
  */
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Input as Input;
+use App\User as User;
 
 trait UsersTrait {
 
@@ -27,12 +28,13 @@ trait UsersTrait {
         $avatar = self::getAvatar($user);
 
         Session::put('user_id', $user['id']);
-        
+
         $roles = json_encode($user['roles']);
-        
+
         Session::put('user_data', [
             'auth' => $user['token'],
             'name' => $user['display_name'],
+            'username' => $user['username'],
             'roles' => json_decode($roles, true),
             'bio' => $user['bio'],
             'avatar' => $avatar,

@@ -1,6 +1,6 @@
-
 socket.on('user-login', function (data) {
-
+    if (data.multiple != "undefined" && data.multiple == true)
+        window.location.href = "/logout";
     $.get('/admin/users/saveClient', data, function () {});
 
 });
@@ -12,7 +12,6 @@ socket.on('user-update', function (data) {
     $('.overlay-update').fadeIn('slow');
     $.post('/admin/users/flushSession', data, function () {});
 
-    // toastr.info('Are you the 6 fingered man?')
     window.setTimeout(function () {
         window.location.reload();
     }, 5000);
@@ -25,10 +24,8 @@ socket.on('user-ban', function (data) {
     $('body').css('overflow', 'hidden');
     $('.overlay-ban').fadeIn('slow');
 
-    // toastr.info('Are you the 6 fingered man?')
     window.setTimeout(function () {
-        window.location.href="/logout";
+        window.location.href = "/logout";
     }, 5000);
 
 });
-

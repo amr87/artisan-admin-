@@ -12,7 +12,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'user_id', 'client_id'
+        'user_id', 'client_id','status','last_active'
     ];
 
     /**
@@ -23,4 +23,6 @@ class User extends Authenticatable
     protected $hidden = [
       
     ];
+    
+    public $timestamps = false;
 }

@@ -453,5 +453,10 @@ class UsersController extends Controller {
 
         UsersTrait::flushSession(Input::all());
     }
+    
+    public function userLeft() {
+
+        UsersTrait::userLeft(Input::all());
+    }
 
 }

@@ -99,7 +99,72 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="control-sidebar-bg"></div>
         </div>
         <!-- ./wrapper -->
+ <!-- Chat -->
+        
+         <div class="col-md-3" id="chat-area">
+          <!-- DIRECT CHAT SUCCESS -->
+          <div class="box box-success direct-chat direct-chat-success">
+            <div class="box-header with-border">
+              <h3 class="box-title">Chat</h3>
 
+              <div class="box-tools pull-right">
+              
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+         
+          
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <!-- Conversations are loaded here -->
+              <div class="direct-chat-messages">
+                <!-- Message. Default to the left -->
+                <div class="direct-chat-msg">
+                  <div class="direct-chat-info clearfix">
+                    <span class="direct-chat-name pull-left">Alexander Pierce</span>
+                    <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
+                  </div>
+                  <!-- /.direct-chat-info -->
+                  <img class="direct-chat-img" src="{{asset('bower_components/AdminLTE/dist/img/user1-128x128.jpg')}}" alt="Message User Image"><!-- /.direct-chat-img -->
+                  <div class="direct-chat-text">
+                    Is this template really for free? That's unbelievable!
+                  </div>
+                  <!-- /.direct-chat-text -->
+                </div>
+                <!-- /.direct-chat-msg -->
+
+                <!-- Message to the right -->
+                <div class="direct-chat-msg right">
+                  <div class="direct-chat-info clearfix">
+                    <span class="direct-chat-name pull-right">Sarah Bullock</span>
+                    <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
+                  </div>
+                  <!-- /.direct-chat-info -->
+                  <img class="direct-chat-img" src="{{asset('bower_components/AdminLTE/dist/img/user3-128x128.jpg')}}" alt="Message User Image"><!-- /.direct-chat-img -->
+                  <div class="direct-chat-text">
+                    You better believe it!
+                  </div>
+                  <!-- /.direct-chat-text -->
+                </div>
+                <!-- /.direct-chat-msg -->
+              </div>
+              <!--/.direct-chat-messages-->
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <div class="input-group">
+                  <input name="message" placeholder="Type Message ..." class="form-control" type="text">
+                      <span class="input-group-btn">
+                        <button type="submit" class="btn btn-success btn-flat">Send</button>
+                      </span>
+                </div>
+            </div>
+            <!-- /.box-footer-->
+          </div>
+          <!--/.direct-chat -->
+         </div>
+        <!-- Chat -->
 
 
         <!-- REQUIRED JS SCRIPTS -->
@@ -123,12 +188,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
         @if(Session::get('user_id'))
         <script>
             socket.on('connect', function () {
-                socket.emit('sendId', {id: "{{ Session::get('user_id') }}" , name: "{{ Session::get('user_data')['username']}}"});
+                socket.emit('sendId', {id: "{{ Session::get('user_id') }}" , name: "{{ Session::get('user_data')['name']}}",avatar: "{{ Session::get('user_data')['avatar']}}"});
             });
         </script>
         @endif
         <!-- AdminLTE App -->
         <script src="{{asset('bower_components/AdminLTE/dist/js/app.min.js')}}"></script>
+        <script src="{{asset('js/chat.js')}}"></script>
 
         @yield('footer_scripts')
         <!-- Overlay -->
@@ -140,5 +206,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <h1><i class='fa fa-spinner fa-spin'></i> Admin Has Banned You , please wait a moment</h1>
         </div>
         <!-- Overlay -->
+        
+        
+       
     </body>
 </html>

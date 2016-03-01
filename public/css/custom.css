@@ -73,3 +73,30 @@ div.container { max-width: 1200px !important; }
     text-align: center;
     margin-top: 20%;
 }
+
+ul#online-users li{
+    list-style: none;
+    display: inline-block;
+    margin: 0 15px;
+}
+
+ul#online-users li a {
+    display:block;
+    text-align: left;
+    margin: 5px 0 0 0px ;
+    font-weight: bold;
+    color:#000;
+}
+
+ul#online-users li span{
+    color:green;
+    cursor: pointer;
+    margin:0 0 0 15px;
+}
+
+#chat-area{
+    display:none;
+    position: absolute;
+    bottom:0;
+    right:0;
+}

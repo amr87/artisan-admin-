@@ -21,14 +21,14 @@
                     <label><strong> First Name</strong></label>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-question"></i></span>
-                        <input value="{{ old('first_name') }}"  type="text" placeholder="First Name" name="first_name" class="form-control">
+                        <input value="{{ old('first_name') }}" required="" type="text" placeholder="First Name" name="first_name" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
                     <label><strong> Last Name</strong></label>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-question"></i></span>
-                        <input value="{{ old('last_name') }}" type="text" placeholder="Last Name" name="last_name" class="form-control">
+                        <input value="{{ old('last_name') }}"  required="" type="text" placeholder="Last Name" name="last_name" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">

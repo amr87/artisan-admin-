@@ -442,6 +442,9 @@ class UsersController extends Controller {
 
             UsersTrait::flushSession((array) $response['data']);
 
+            \Redis::publish('user-login', json_encode((array) $response['data']));
+
+
             return redirect('/admin/')->with('success', 'Welcome To Artisan');
         } else {
 
@@ -485,7 +488,7 @@ class UsersController extends Controller {
 
     public function postMessage(Request $request) {
         $id = $request->session()->get('user_id');
-     
+
         $message = Input::get('message');
         $to = Input::get('to');
 

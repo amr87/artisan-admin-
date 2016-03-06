@@ -1,6 +1,5 @@
 socket.on('user-login', function (data) {
-    if (data.multiple != "undefined" && data.multiple == true)
-        window.location.href = "/logout";
+
     $.get('/admin/users/saveClient', data, function () {});
 
 });
@@ -30,28 +29,26 @@ socket.on('user-ban', function (data) {
 
 });
 
+
 socket.on('connectedUser', function (json) {
+
     $(".users-online").find(".box-title").html("Users Online <strong>" + json.users.length + "</strong>");
     var output = "";
     output += "<ul id='online-users'>";
 
     for (var i = 0; i < json.users.length; i++) {
 
+        var k = Artisan.getKey(json.users[i]);
+
         output += "<li><img class='img-circle' src='" + json.users[i].avatar + "' width='60'/>\n\
-                        <a  target='_blank' href='/admin/users/" + getKey(json.users[i]) + "'>" + json.users[i].name + "</a><li>";
-         
-         //          </li>";
+                        <a  target='_blank' href='/admin/users/" + k + "'>" + json.users[i].name + "</a>\n\
+                        <span  data-id='" + k + "'  data-client='" + json.users[i][k] + "' class='fa fa-lg fa-comment chat-start'></span>\n\
+                   </li>";
 
     }
 
     output += "</ul>";
+
     $(".users-online").find(".overlay").remove();
     $(".users-online").find(".box-body").html(output);
 });
-
-
-function getKey(data) {
-    for (var prop in data)
-        if (data.propertyIsEnumerable(prop))
-            return prop;
-}

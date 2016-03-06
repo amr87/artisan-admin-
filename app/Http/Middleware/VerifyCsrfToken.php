@@ -13,6 +13,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         '/admin/users/upload/*',
-        '/admin/users/flushSession'
+        '/admin/users/flushSession',
+        '/post-message',
     ];
 }

@@ -453,10 +453,43 @@ class UsersController extends Controller {
 
         UsersTrait::flushSession(Input::all());
     }
-    
-    public function userLeft() {
 
-        UsersTrait::userLeft(Input::all());
+    public function getConversation(Request $request) {
+
+        $id = $request->session()->get('user_id');
+
+        $response = (array)
+                \API::get('messages/get-conversation/' . $id . '/' . Input::get('to'), ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id]);
+
+        if ($response['code'] == 200) {
+
+            foreach ($response['data'] as $message) {
+
+                unset($message->sender->token);
+                unset($message->receiver->token);
+
+                $carbon = new \Carbon\Carbon;
+                $message->sent_at = $carbon->diffForHumans(\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $message->sent_at));
+
+                $message->mine = $message->from_id == $id ? true : false;
+
+                $message->receiver->avatar = UsersTrait::getAvatar($message->receiver);
+                $message->sender->avatar = UsersTrait::getAvatar($message->sender);
+            }
+
+            return array_reverse($response['data']);
+        }
+
+        return [];
+    }
+
+    public function postMessage(Request $request) {
+        $id = $request->session()->get('user_id');
+     
+        $message = Input::get('message');
+        $to = Input::get('to');
+
+        \API::post('messages/create', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id, 'to_id' => $to, 'text' => $message]);
     }
 
 }

@@ -38,6 +38,10 @@ Route::post('/login', ['uses' => 'UsersController@processLogin', 'middleware' =>
 
 Route::get('/forget-password', ['uses' => 'UsersController@forgetPassword']);
 
+Route::get('/get-conversation', ['uses' => 'UsersController@getConversation','middleware' => 'web']);
+
+Route::post('/post-message', ['uses' => 'UsersController@postMessage','middleware' => 'web']);
+
 Route::post('/reset-password', ['uses' => 'UsersController@processForgetPassword', 'middleware' => 'web']);
 
 Route::get('/reset-password', ['uses' => 'UsersController@resetPassword', 'middleware' => 'web']);

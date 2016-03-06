@@ -94,9 +94,20 @@ ul#online-users li span{
     margin:0 0 0 15px;
 }
 
-#chat-area{
+.chat-area{
     display:none;
-    position: absolute;
+    position: fixed;
     bottom:0;
     right:0;
+    z-index: 10000;
+}
+
+span.chat-with{
+    font-style: italic;
+    font-weight: bold;
+    color:green;
+}
+
+.yellowish{
+    background: #ff0;
 }

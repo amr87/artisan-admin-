@@ -462,7 +462,7 @@ class UsersController extends Controller {
         $id = $request->session()->get('user_id');
 
         $response = (array)
-                \API::get('messages/get-conversation/' . $id . '/' . Input::get('to'), ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id]);
+                \API::get('messages/get-conversation/' . $id . '/' . Input::get('to'), ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id , 'limit' => Input::get('skip')]);
 
         if ($response['code'] == 200) {
 
@@ -471,12 +471,15 @@ class UsersController extends Controller {
                 unset($message->sender->token);
                 unset($message->receiver->token);
 
-                $carbon = new \Carbon\Carbon;
-                $message->sent_at = $carbon->diffForHumans(\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $message->sent_at));
-
+                $message->sent_at = \Carbon\Carbon::parse($message->sent_at)->isToday() ?
+                        \Carbon\Carbon::parse($message->sent_at)->format('g:i A'):
+                        \Carbon\Carbon::parse($message->sent_at)->format('d M g:i A');
+                        
+              
                 $message->mine = $message->from_id == $id ? true : false;
 
                 $message->receiver->avatar = UsersTrait::getAvatar($message->receiver);
+                
                 $message->sender->avatar = UsersTrait::getAvatar($message->sender);
             }
 

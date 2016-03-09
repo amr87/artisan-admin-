@@ -9,6 +9,15 @@ socket.on('user-update', function (data) {
     var data = JSON.parse(data);
     $('body').css('overflow', 'hidden');
     $('.overlay-update').fadeIn('slow');
+
+        // Artisan.Notification({
+        //     text : 'User Updated ',
+        //     type :'warning',
+        //     animation:{
+        //         open:'zoomIn',
+        //         close:'zoomOut'
+        //     }
+        // });
     $.post('/admin/users/flushSession', data, function () {});
 
     window.setTimeout(function () {

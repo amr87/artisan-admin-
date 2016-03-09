@@ -20,7 +20,7 @@
         <div class="box-body">
             <!-- Conversations are loaded here -->
             <div class="direct-chat-messages">
-
+                
             </div>
             <!--/.direct-chat-messages-->
         </div>
@@ -40,3 +40,4 @@
 <!-- Chat -->
 
 <input type="hidden" id="myId"  value="{{ Session::get('user_id')}}"/>
+ <span class="new-messages"><i class="fa fa-envelope-o"></i> You have new messages <i class="fa fa-arrow-down"></i></span>

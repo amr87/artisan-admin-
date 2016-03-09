@@ -24,6 +24,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               apply the skin class to the body tag so the changes take effect.
         -->
         <link rel="stylesheet" href="{{asset('bower_components/AdminLTE/dist/css/skins/skin-blue.min.css')}}">
+        <link rel="stylesheet" href="{{asset('css/animate.css')}}">
         <link rel="stylesheet" href="{{asset('css/custom.css')}}">
 
         @yield('header_styles')
@@ -65,7 +66,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
-           
+
                 @include('partials/breadcrumb')
 
                 <!-- Main content -->
@@ -89,7 +90,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="control-sidebar-bg"></div>
         </div>
         <!-- ./wrapper -->
-        
+
         @include('includes/chat-box')
 
         <!-- REQUIRED JS SCRIPTS -->
@@ -103,21 +104,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Underscore JS -->
         <script src="{{asset('js/underscorejs.min.js')}}"></script>
 
+        <!-- Noty -->
+        <script src="{{asset('js/noty.js')}}"></script>
+
         <!-- Artisan JS -->
         <script src="{{asset('js/Artisan.js')}}"></script>
-        
+
         <!-- Artisan JS -->
         <script src="{{asset('js/ArtisanChat.js')}}"></script>
 
         @include('includes/socket')
 
-       <script src="{{asset('js/chat.js')}}"></script>
+        <script src="{{asset('js/chat.js')}}"></script>
         <!-- AdminLTE App -->
         <script src="{{asset('bower_components/AdminLTE/dist/js/app.min.js')}}"></script>
 
         @yield('footer_scripts')
-        
+
         @include('includes/overlays')
-      
+
+
     </body>
 </html>

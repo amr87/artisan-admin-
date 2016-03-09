@@ -32,6 +32,8 @@ ArtisanChat.init = function (chat) {
 
     $._widget = this.build(chat);
 
+    this.count++;
+
     $._widget.attr("data-client", $(chat).data('client'));
 
     $._widget.attr("data-id", $(chat).data('id'));
@@ -40,9 +42,11 @@ ArtisanChat.init = function (chat) {
 
     $._widget.find(".chat-with").text(this.chattingWith);
 
-    var template = this.loadConversation(chat);
+    var template = this.loadConversation(chat, null);
+    if (template.length)
+        $._widget.find(".direct-chat-messages").prepend($("<a class='prev-msg' href='#'><i class='fa fa-arrow-up'></i> Load More Messages<br/><span class='fa fa-spinner fa-spin'></span></a>"));
 
-    $._widget.find(".direct-chat-messages").html(template);
+    $._widget.find(".direct-chat-messages").append(template);
 
     $._widget.show();
 
@@ -81,20 +85,17 @@ ArtisanChat.build = function (data) {
 }
 
 
-ArtisanChat.loadConversation = function (chat) {
-
-    if (!_.isObject(chat)) {
-        console.error('You must pass chat as an object.');
-        alert('Sorry, something went terribly wrong, please refresh the page and try again.');
-        return;
-    }
+ArtisanChat.loadConversation = function (chat, skip) {
 
     var template = "";
+
+    var id = _.isObject(chat) ? chat.data('id') : chat;
+    var skip = skip === null ? 0 : skip;
 
     $.ajax({
         url: '/get-conversation',
         type: 'GET',
-        data: {to: chat.data('id')},
+        data: {to: id, skip: skip},
         async: false,
         success: function (response) {
 
@@ -163,13 +164,14 @@ ArtisanChat.sendMessage = function (object) {
 
     var senderId = $("input#myId").val();
 
-    var senderClient = this.getSender(senderId);
+    var senderClient = Artisan.filter($('span.chat-start'), "[data-id='" + senderId + "']").data("client");
+
 
     var template = "";
     template += "<div class='direct-chat-msg'>\n";
     template += "<div class='direct-chat-info clearfix'>\n";
     template += " <span class='direct-chat-name pull-left'>" + name + "</span>\n";
-    template += "<span class='direct-chat-timestamp pull-right'>Now</span>\n";
+    template += "<span class='direct-chat-timestamp pull-left' data-timestamp='" + new Date().getTime() + "'>Now</span>\n";
     template += "</div>\n";
     template += "<img class='direct-chat-img' src='" + avatar + "' alt='Message User Image'>\n";
     template += "<div class='direct-chat-text'>\n";
@@ -177,16 +179,16 @@ ArtisanChat.sendMessage = function (object) {
     template += " </div>\n";
     template += "</div>"
 
-    _widget.find(".direct-chat-messages").animate({scrollTop:_widget.find(".direct-chat-messages").outerHeight()},800).append(template);
-
+    _widget.find(".direct-chat-messages").append(template);
+    _widget.find(".direct-chat-messages").animate({'scrollTop': _widget.find(".direct-chat-messages").get(0).scrollHeight + "px"});
 
     //emit message
     socket.emit('message', {message: message, client: client, user_id: id, name: name, avatar: avatar, senderId: senderId, sclient: senderClient});
-    
- 
+
+
 
     // save message
-     $.post('/post-message', {to: id, message: message}, function () {});
+    $.post('/post-message', {to: id, message: message}, function () {});
 
     // clear message input
     $(object).parent().prev().val("");
@@ -196,8 +198,6 @@ ArtisanChat.sendMessage = function (object) {
 
 
 ArtisanChat.receiveMessage = function (data) {
-
-    // data should belong to the receiver not sender 
 
     if (!_.isObject(data)) {
         console.error('You must pass data as an object.');
@@ -209,11 +209,14 @@ ArtisanChat.receiveMessage = function (data) {
 
     var Current = Artisan.filter(this.holder, "[data-id='" + key + "']");
 
+    var pos = $('.chat-area').length > 1 ? (($('.chat-area').length - 1) * parseInt($('.chat-area').width()) + 20) + "px" : '0px';
+
     if (!Current.length) {
 
         $._widget = this.holder.clone();
 
-        $._widget.css({right: this.position});
+
+        $._widget.css({right: pos});
 
         $._widget.appendTo($('body'));
 
@@ -226,7 +229,7 @@ ArtisanChat.receiveMessage = function (data) {
         template += "<div class='direct-chat-msg right'>\n";
         template += "<div class='direct-chat-info clearfix'>\n";
         template += " <span class='direct-chat-name pull-right'>" + data.name + "</span>\n";
-        template += "<span class='direct-chat-timestamp pull-left'>Now</span>\n";
+        template += "<span class='direct-chat-timestamp pull-left' data-timestamp='" + new Date().getTime() + "'>Now</span>\n";
         template += "</div>\n";
         template += "<img class='direct-chat-img' src='" + data.avatar + "' alt='Message User Image'>\n";
         template += "<div class='direct-chat-text'>\n";
@@ -234,46 +237,44 @@ ArtisanChat.receiveMessage = function (data) {
         template += " </div>\n";
         template += "</div>"
 
-        // var messages = this.loadConversation(data);
-        //if(messages != "")
-        //$(messages).prependTo(_widget.find(".direct-chat-messages"));
-
-        $._widget.find(".direct-chat-messages").animate({scrollTop:$._widget.find(".direct-chat-messages").outerHeight()},800).append(template);
+        $._widget.find(".direct-chat-messages").prepend($("<a class='prev-msg' href='#'><i class='fa fa-arrow-up'></i> Load More Messages<br/><span class='fa fa-spinner fa-spin'></span></a>"));
+        $._widget.find(".direct-chat-messages").append(template);
         $._widget.show();
 
     } else {
 
         $._widget = Current;
 
-        if ($._widget.find('.box-body').css('display') == "none") {
-            $._widget.find('.box-header').addClass("yellowish");
-        }
 
-
-        // var messages = this.loadConversation(data);
-        //if(messages != "")
-        //$(messages).prependTo(_widget.find(".direct-chat-messages")
+        $._widget.find('.box-header').addClass("redish");
 
         var template = "";
 
         template += "<div class='direct-chat-msg right'>\n";
         template += "<div class='direct-chat-info clearfix'>\n";
         template += " <span class='direct-chat-name pull-right'>" + data.name + "</span>\n";
-        template += "<span class='direct-chat-timestamp pull-left'>Now</span>\n";
+        template += "<span class='direct-chat-timestamp pull-left' data-timestamp='" + new Date().getTime() + "'>Now</span>\n";
         template += "</div>\n";
         template += "<img class='direct-chat-img' src='" + data.avatar + "' alt='Message User Image'>\n";
         template += "<div class='direct-chat-text'>\n";
         template += data.message + "\n";
         template += " </div>\n";
         template += "</div>"
+        if (!$._widget.find(".direct-chat-messages").find("a.prev-msg").length)
+            $._widget.find(".direct-chat-messages").prepend($("<a class='prev-msg' href='#'><i class='fa fa-arrow-up'></i> Load More Messages<br/><span class='fa fa-spinner fa-spin'></span></a>"));
 
-        $._widget.find(".direct-chat-messages").animate({scrollTop:$._widget.find(".direct-chat-messages").outerHeight()},800).append(template);
+        var hasScroll = Artisan.hasScrollBar($._widget.find('.direct-chat-messages'));
+        var scrolled = Artisan.scolledDown($._widget.find('.direct-chat-messages'));
+        if (hasScroll && !scrolled) {
+            var alert = $("span.new-messages").clone();
+            alert.prependTo($._widget.find('.box-body'))
+                    .fadeIn();
+
+        }
+
+        $._widget.find(".direct-chat-messages").append(template);
 
     }
-
-
-
-
 
 }
 
@@ -292,16 +293,7 @@ ArtisanChat.close = function (button) {
 };
 
 
-ArtisanChat.getSender = function (id) {
 
-    if (!_.isString(id) || id == "") {
-        console.error('You must pass id as an string.');
-        alert('Sorry, something went terribly wrong, please refresh the page and try again.');
-        return;
-    }
-
-    return Artisan.filter($('span.chat-start'), "[data-id='" + id + "']").data("client");
-}
 
 ArtisanChat.RePosition = function (action, widget) {
 
@@ -327,7 +319,7 @@ ArtisanChat.RePosition = function (action, widget) {
 
             if (parseInt($(elem).css('right')) == thisPos && widget.css('style') != "block") {
 
-                var newPos = Visible.length <= 1 ? 0 : (Visible.length - 1) * parseInt(ArtisanChat.css('width'));
+                var newPos = this.count * parseInt(ArtisanChat.css('width'));
 
                 $(elem).animate({right: newPos + "px"}, 'slow');
             }

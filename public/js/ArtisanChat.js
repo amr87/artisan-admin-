@@ -44,7 +44,7 @@ ArtisanChat.init = function (chat) {
     $._widget.show();
 
     var template = this.loadConversation(chat, null);
-    $._widget.find(".spin-it").remove();
+
     if (template.length)
         $._widget.find(".direct-chat-messages").prepend($("<a class='prev-msg' href='#'><i class='fa fa-arrow-up'></i> Load More Messages<br/><span class='fa fa-spinner fa-spin'></span></a>"));
 
@@ -111,6 +111,10 @@ ArtisanChat.loadConversation = function (chat, threshold) {
         type: 'GET',
         data: {to: id, skip: skip},
         async: false,
+        beforeSend: function () {
+
+            $(".chat-area [data-client='" + Artisan.filter($('span.chat-start'), "[data-id='" + id + "']").data("client") + "']").find(".spin-it").fadeIn();
+        },
         success: function (response) {
 
             if (response.length) {
@@ -144,7 +148,12 @@ ArtisanChat.loadConversation = function (chat, threshold) {
                 }
             }
 
-        }});
+        }
+        , complete: function () {
+
+            $(".chat-area [data-client='" + Artisan.filter($('span.chat-start'), "[data-id='" + id + "']").data("client") + "']").find(".spin-it").remove();
+        }
+    });
 
     return template;
 

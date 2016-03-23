@@ -499,21 +499,36 @@ class UsersController extends Controller {
 
         echo $response['code'] == 201 ? json_encode(["id" => $response["data"]->id]) : json_encode(['id' => 0]);
     }
-    
+
     public function seenMessage(Request $request) {
-        
+
         $id = $request->session()->get('user_id');
 
         $messageID = Input::get('id');
-    
+        
 
-        $response = \API::post('messages/seen/'.$messageID, ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id, '_method' => 'PUT']);
+        $response = \API::post('messages/seen', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id, '_method' => 'PUT', 'id' => $messageID]);
 
-        echo $response['code'] == 200 ? json_encode(["id" => $response["data"]->id , 'seen_at' => $response['data']->seen_at]) : json_encode(['id' => 0 , 'seen_at' => null]);
+        if ($response['code'] == 200) {
+            foreach ($response["data"] as $message) {
+
+                $node["id"] = $message->id;
+                $message->seen_at = \Carbon\Carbon::parse($message->seen_at->date)->isToday() ?
+                        \Carbon\Carbon::parse($message->seen_at->date)->format('g:i A') :
+                        \Carbon\Carbon::parse($message->seen_at->date)->format('d M g:i A');
+                $node["seen_at"] = $message->seen_at;
+
+                $nodes[] = $node;
+            }
+        } else {
+            $nodes = [];
+        }
+
+        echo json_encode($nodes);
     }
 
     public function userConversation(Request $request) {
-        
+
         $id = $request->session()->get('user_id');
         $token = $request->session()->get('user_data')['auth'];
 

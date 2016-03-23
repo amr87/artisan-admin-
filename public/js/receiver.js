@@ -39,8 +39,33 @@ socket.on('user-ban', function (data) {
 });
 
 socket.on('seen', function (data) {
+// data.msg_seen
+    var seen = $("<p/>");
+    seen.addClass("seen-mark");
+    var currentChat = $(".chat-area[data-client='" + data.senderId + "']");
+    if (currentChat.length) {
+        //currentChat.find(".seen-mark").remove();
+        seen.html("<i class='fa fa-eye'></i> At " + data.msg_seen);
+        seen.appendTo(currentChat.find(".direct-chat-text:last"));
+    }
 
-//alert('okay seen');
+});
+
+
+socket.on('typing', function (data) {
+
+    var typing = $("<p/>");
+    typing.addClass("typing");
+    var currentChat = $(".chat-area[data-client='" + data.senderClient + "']");
+    if (currentChat.length) {
+        typing.html("<i class='fa fa-pencil'></i> typing....");
+        typing.appendTo(currentChat.find(".direct-chat-messages"));
+    }
+});
+
+socket.on('untyping', function (data) {
+   var currentChat = $(".chat-area[data-client='" +data.senderClient + "']");
+   currentChat.find(".typing").remove();
 
 });
 

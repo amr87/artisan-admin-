@@ -50,6 +50,18 @@ ArtisanChat.init = function (chat) {
 
     $._widget.show();
 
+    $._widget.find('input#message').typing({
+        start: function (event, $elem) {
+            var client = $elem.parent().parent().parent().parent().data("client");
+            socket.emit('typing', {client: client , senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
+        },
+        stop: function (event, $elem) {
+            var client = $elem.parent().parent().parent().parent().data("client");
+            socket.emit('untyping', {client: client,senderClient:Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
+        },
+        delay: 400
+    });
+
 };
 
 
@@ -104,7 +116,7 @@ ArtisanChat.loadConversation = function (chat, threshold) {
                 for (var i = 0; i < response.length; i++) {
 
                     if (response[i].mine) {
-                        template += "<div data-mine='1' data-seen='" + response[i].seen + "' class='direct-chat-msg'>\n";
+                        template += "<div data-mine='1' data-id='" + response[i].id + "' data-seen='" + response[i].seen + "' class='direct-chat-msg'>\n";
                         template += "<div class='direct-chat-info clearfix'>\n";
                         template += " <span class='direct-chat-name pull-left'>" + response[i].sender.display_name + "</span>\n";
                         template += "<span class='direct-chat-timestamp pull-right'>" + response[i].sent_at + "</span>\n";
@@ -116,7 +128,7 @@ ArtisanChat.loadConversation = function (chat, threshold) {
                         template += "</div>"
 
                     } else {
-                        template += "<div data-mine='0' data-seen='" + response[i].seen + "' class='direct-chat-msg right'>\n";
+                        template += "<div data-mine='0' data-id='" + response[i].id + "' data-seen='" + response[i].seen + "' class='direct-chat-msg right'>\n";
                         template += "<div class='direct-chat-info clearfix'>\n";
                         template += " <span class='direct-chat-name pull-right'>" + response[i].sender.display_name + "</span>\n";
                         template += "<span class='direct-chat-timestamp pull-left'>" + response[i].sent_at + "</span>\n";
@@ -131,8 +143,6 @@ ArtisanChat.loadConversation = function (chat, threshold) {
             }
 
         }});
-
-    liveScrollListener();
 
     return template;
 
@@ -183,7 +193,7 @@ ArtisanChat.sendMessage = function (object) {
     _widget.find(".direct-chat-messages").append(template);
     _widget.find(".direct-chat-messages").animate({'scrollTop': _widget.find(".direct-chat-messages").get(0).scrollHeight + "px"});
 
-
+    _widget.find(".seen-mark").remove();
     // save message
     $.post('/post-message', {to: id, message: message}, function (response) {
         var data = JSON.parse(response);
@@ -192,10 +202,6 @@ ArtisanChat.sendMessage = function (object) {
             socket.emit('message', {message: message, client: client, user_id: id, name: name, avatar: avatar, senderId: senderId, sclient: senderClient, msg_id: data.id});
         }
     });
-
-
-
-
 
     // clear message input
     $(object).parent().prev().val("");
@@ -212,48 +218,26 @@ ArtisanChat.receiveMessage = function (data) {
         return;
     }
 
+    /* 
+     * increase message counter
+     * @todo increase for differnet conversation only as facebook does
+     */
+    var elem = $("li.messages-menu").find("span");
+    elem.removeClass('label-success').addClass("label-danger").text(parseInt(elem.text()) + 1);
+
+    /*
+     * @ show message if the chat head is opened
+     * 
+     */
+
     var key = _.isUndefined(data.selector) ? data.senderId : data.data('id');
 
     var Current = Artisan.filter(this.holder, "[data-id='" + key + "']");
 
-    var pos = $('.chat-area').length > 1 ? (($('.chat-area').length - 1) * parseInt($('.chat-area').width()) + 20) + "px" : '0px';
-
-    var template = "";
-    if (!Current.length) {
-
-        $._widget = this.holder.clone();
-
-
-        $._widget.css({right: pos});
-
-        $._widget.appendTo($('body'));
-
-
-        $._widget.find(".chat-with").text(data.name);
-        $._widget.attr("data-client", data.sclient);
-        $._widget.attr("data-id", data.senderId);
-
-
-        template += "<div data-seen='0' data-mine='0' data-id='" + data.msg_id + "' class='direct-chat-msg right'>\n";
-        template += "<div class='direct-chat-info clearfix'>\n";
-        template += " <span class='direct-chat-name pull-right'>" + data.name + "</span>\n";
-        template += "<span class='direct-chat-timestamp pull-left' data-timestamp='" + new Date().getTime() + "'>Now</span>\n";
-        template += "</div>\n";
-        template += "<img class='direct-chat-img' src='" + data.avatar + "' alt='Message User Image'>\n";
-        template += "<div class='direct-chat-text' style='height:30px !important'>\n";
-        template += data.message + "\n";
-        template += " </div>\n";
-        template += "</div>"
-
-        $._widget.find(".direct-chat-messages").prepend($("<a class='prev-msg' href='#'><i class='fa fa-arrow-up'></i> Load More Messages<br/><span class='fa fa-spinner fa-spin'></span></a>"));
-        $._widget.find(".direct-chat-messages").append(template);
-        $._widget.show();
-
-
-    } else {
+    if (Current.length) {
+        var template = "";
 
         $._widget = Current;
-
 
         $._widget.find('.box-header').addClass("redish");
 
@@ -280,43 +264,10 @@ ArtisanChat.receiveMessage = function (data) {
         }
 
         $._widget.find(".direct-chat-messages").append(template);
-
+        $._widget.find(".seen-mark").remove();
     }
-    
+
     Artisan.titleMarquee(data.name + ' Messaged you');
-    // this.setSeen(template, data);
-
-    liveScrollListener();
-    
-        var current, parent, up;
-
-    $._widget.on("mouseenter", function () {
-        var textChat = $(this).find(".direct-chat-msg");
-        parent = $(this);
-        textChat.each(function () {
-            current = $(this);
-            console.log($(this).data("mine") + " | " + $(this).data("seen"));
-            if (
-                    current.data("mine") == "0" &&
-                    current.data("seen") == "0") {
-              
-                $.ajax({
-                    url: '/message-seen',
-                    type: 'POST',
-                    cache: false,
-                    data: {id: current.data("id")},
-                    success: function (response) {
-                        var res = JSON.parse(response);
-                        if (res.id != 0) {
-                            current.attr("data-seen", "1");
-                            socket.emit('seen', {client: parent.data("client"), msg_id: res.id, msg_seen: res.seen_at});
-                        }
-                    }});
-            }
-
-        });
-
-    })
 
 }
 
@@ -333,8 +284,6 @@ ArtisanChat.close = function (button) {
     this.RePosition('delete', {});
 
 };
-
-
 
 
 ArtisanChat.RePosition = function (action, widget) {
@@ -371,22 +320,118 @@ ArtisanChat.RePosition = function (action, widget) {
 
 }
 
-ArtisanChat.setSeen = function (template, data) {
-    $(window).focus();
-    var heights = $('.direct-chat-messages').find('.direct-chat-text').length * 15;
-    console.log(heights);
-    if (heights <= 45) {
-        $.ajax({
-            url: '/message-seen',
-            type: 'POST',
-            data: {id: data.msg_id},
-            async: false,
-            success: function (response) {
-                var res = JSON.parse(response);
-                if (res.id != 0) {
-                    socket.emit('seen', {client: data.sclient, msg_id: res.id, msg_seen: res.seen_at});
-                }
-            }});
+var current;
+
+ArtisanChat.setSeen = function (obj) {
+
+    if (!_.isObject(obj)) {
+        console.error('You must pass obj as an object.');
+        alert('Sorry, something went terribly wrong, please refresh the page and try again.');
+        return;
     }
 
+    current = $(obj);
+    $(current).find('.box-header').removeClass('redish');
+    Artisan.resetDocumentTitle();
+    if (Artisan.scrolledDown($(current).find(".direct-chat-messages"))) {
+        // find non seen messages
+        var notSeen = $(current).find(".direct-chat-msg[data-seen='0']");
+        if (notSeen.length) {
+            var ids = [];
+            for (var i = 0; i < notSeen.length; i++) {
+                ids.push($(notSeen[i]).data("id"));
+            }
+            if (ids.length) {
+                if (current.data('requestRunning')) {
+                    return;
+                }
+                current.data('requestRunning', true);
+                $.ajax({
+                    type: "POST",
+                    url: "/message-seen",
+                    data: {id: ids},
+                    success: function (response) {
+                        var data = JSON.parse(response);
+                        if (data.length) {
+                            for (var j = 0; j < data.length; j++) {
+                                $(".direct-chat-msg[data-id = '" + data[j].id + "']").attr("data-seen", "1");
+                            }
+                            var senderClient = Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client");
+                            socket.emit('seen', {client: $(current).data("client"), senderId: senderClient, msg_id: data[j - 1].id, msg_seen: data[j - 1].seen_at});
+                        }
+                    },
+                    complete: function () {
+                        current.data('requestRunning', false);
+                    }
+                });
+
+
+            }
+        }
+    }
+}
+
+ArtisanChat.loadPreviousMessages = function (obj) {
+    if (!_.isObject(obj)) {
+        console.error('You must pass obj as an object.');
+        alert('Sorry, something went terribly wrong, please refresh the page and try again.');
+        return;
+    }
+    $(obj).find('span').fadeIn();
+    var box = $(obj).parent().parent().parent().parent();
+    var id = box.data("id");
+    var skip = $(obj).parent().find('.direct-chat-msg').length;
+    var template = ArtisanChat.loadConversation(id, skip);
+    $(obj).find('span').fadeOut();
+    $(template).insertAfter($(obj));
+    if (!template.length)
+        $(obj).remove();
+}
+
+
+ArtisanChat.loadUserConversations = function () {
+
+    $.get('/user-conversations', {}, function (response) {
+        var data = JSON.parse(response);
+        var output = "";
+        if (data.length > 0) {
+
+            output += "<li class='header'>You have " + data.length + " conversation(s)</li>";
+            output += "<li><ul class='menu conversation-holder'>";
+            for (var i = 0; i < data.length; i++) {
+
+                if (data[i]['messages'][0]['mine']) {
+                    var selector = $("span.chat-start[data-id='" + data[i]['messages'][0]['receiver']['id'] + "']");
+                    var seen = data[i]['messages'][0]['seen'] == "1" ? '' : 'pale-red';
+                    var client = selector.length ? selector.data('client') : null;
+                    var seenIcon = data[i]['messages'][0]['seen'] == "1" ? "<i class='fa fa-eye'></i>" : "";
+                    output += " <li data-with='" + data[i]['messages'][0]['receiver']['display_name'] + "' class='chat-start " + seen + "' data-id='" + data[i]['messages'][0]['receiver']['id'] + "' data-client='" + client + "'> <a href='#'><div class='pull-left'>";
+                    output += " <img src='" + data[i]['messages'][0]['receiver']['avatar'] + "' class='img-circle' alt='User Image'></div> <h4>\n\
+                                                             " + data[i]['messages'][0]['receiver']['display_name'] + " \n\
+                                                                <small><i class='fa fa-clock-o'></i> \n\
+                                                             " + data[i]['messages'][0]['sent_at'] + "</small></h4>\n\
+                                                              <p>You: " + data[i]['messages'][0]['text'] + " " + seenIcon + "</p>";
+                } else {
+                    var selector = $("span.chat-start[data-id='" + data[i]['messages'][0]['sender']['id'] + "']");
+                    var seen = data[i]['messages'][0]['seen'] == "1" ? '' : 'pale-red';
+                    var client = selector.length ? selector.data('client') : null;
+                    output += " <li data-with='" + data[i]['messages'][0]['sender']['display_name'] + "' class='chat-start " + seen + "' data-id='" + data[i]['messages'][0]['sender']['id'] + "' data-client='" + client + "'> <a href='#'><div class='pull-left'>";
+                    output += " <img src='" + data[i]['messages'][0]['sender']['avatar'] + "' class='img-circle' alt='User Image'></div>\n\
+                                  <h4>" + data[i]['messages'][0]['sender']['display_name'] + "   <small><i class='fa fa-clock-o'></i> \n\
+                                                             " + data[i]['messages'][0]['sent_at'] + "</small></h4>\n\
+                                                                <p>" + data[i]['messages'][0]['text'] + "</p>";
+                }
+
+                output += "</a></li>";
+            }
+            output += "</ul>";
+            // output += " <li class='footer'> <a href='$' > See All Messages </a></li>";
+        } else {
+            output += "<h4>No Conversations yet</h4>";
+            output += "</ul>";
+        }
+
+        $("li.messages-menu").find('ul.dropdown-menu').html(output);
+
+    });
 }

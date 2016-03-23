@@ -8,6 +8,8 @@
 
 $ = jQuery.noConflict();
 
+var marqueeTitle, originalTitle = "Dashboard";
+
 window.Artisan = {};
 
 Artisan.getKey = function (props) {
@@ -88,34 +90,26 @@ Artisan.Notification = function (props) {
 }
 
 Artisan.titleMarquee = function (text) {
+
+    if (!_.isString(text)) {
+        console.error('You must pass text as an string.');
+        alert('Sorry, something went terribly wrong, please refresh the page and try again.');
+        return;
+    }
+    originalTitle = document.title;
     document.title = text;
     var documentTitle = document.title + " - ";
 
     (function titleMarquee() {
         document.title = documentTitle = documentTitle.substring(1) + documentTitle.substring(0, 1);
-        setTimeout(titleMarquee, 200);
+        marqueeTitle = setTimeout(titleMarquee, 200);
     })();
 }
 
+Artisan.resetDocumentTitle = function () {
 
-
-var vis = (function () {
-    var stateKey, eventKey, keys = {
-        hidden: "visibilitychange",
-        webkitHidden: "webkitvisibilitychange",
-        mozHidden: "mozvisibilitychange",
-        msHidden: "msvisibilitychange"
-    };
-    for (stateKey in keys) {
-        if (stateKey in document) {
-            eventKey = keys[stateKey];
-            break;
-        }
-    }
-    return function (c) {
-        if (c)
-            document.addEventListener(eventKey, c);
-        return !document[stateKey];
-    }
-})();
-
+    window.clearTimeout(marqueeTitle);
+    document.title = originalTitle;
+    if (parseInt($("li.messages-menu").find("span").text()) > 0)
+        $("li.messages-menu").find("span").text(parseInt($("li.messages-menu").find("span").text()) - 1);
+}

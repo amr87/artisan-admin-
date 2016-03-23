@@ -58,14 +58,17 @@ socket.on('typing', function (data) {
     typing.addClass("typing");
     var currentChat = $(".chat-area[data-client='" + data.senderClient + "']");
     if (currentChat.length) {
+        if (currentChat.find('p.typing').length)
+            currentChat.find('p.typing').remove();
         typing.html("<i class='fa fa-pencil'></i> typing....");
         typing.insertAfter(currentChat.find(".direct-chat-text:last"));
     }
 });
 
 socket.on('untyping', function (data) {
-   var currentChat = $(".chat-area[data-client='" +data.senderClient + "']");
-   currentChat.find(".typing").remove();
+    var currentChat = $(".chat-area[data-client='" + data.senderClient + "']");
+    if (currentChat.find('p.typing').length)
+        currentChat.find(".typing").remove();
 
 });
 

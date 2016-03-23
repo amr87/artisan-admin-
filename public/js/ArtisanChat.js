@@ -41,6 +41,7 @@ ArtisanChat.init = function (chat) {
     ArtisanChat.chattingWith = $(chat).get(0).nodeName == "SPAN" ? $(chat).prev().text() : $(chat).data("with");
 
     $._widget.find(".chat-with").text(this.chattingWith);
+    $._widget.show();
 
     var template = this.loadConversation(chat, null);
     if (template.length)
@@ -48,16 +49,16 @@ ArtisanChat.init = function (chat) {
 
     $._widget.find(".direct-chat-messages").append(template);
 
-    $._widget.show();
+
 
     $._widget.find('input#message').typing({
         start: function (event, $elem) {
             var client = $elem.parent().parent().parent().parent().data("client");
-            socket.emit('typing', {client: client , senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
+            socket.emit('typing', {client: client, senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
         },
         stop: function (event, $elem) {
             var client = $elem.parent().parent().parent().parent().data("client");
-            socket.emit('untyping', {client: client,senderClient:Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
+            socket.emit('untyping', {client: client, senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
         },
         delay: 400
     });

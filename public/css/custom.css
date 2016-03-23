@@ -194,6 +194,7 @@ li.pale-red{
 }
 
 p.seen-mark{
+     margin-top:3px;
     font-size:11px;
     float:right;
 }

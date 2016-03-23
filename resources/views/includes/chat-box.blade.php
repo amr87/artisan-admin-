@@ -20,7 +20,9 @@
         <div class="box-body">
             <!-- Conversations are loaded here -->
             <div class="direct-chat-messages">
-                
+                <div class="spin-it">
+                    <i class="fa fa-spin fa-5x fa-gear"></i>
+                </div>
             </div>
             <!--/.direct-chat-messages-->
         </div>

@@ -211,3 +211,8 @@ li.messages-menu ul li.spinner
     text-align:center;
     margin-top:75px;
 }
+
+.direct-chat-messages .spin-it{
+    text-align: center;
+    margin-top:85px;
+}

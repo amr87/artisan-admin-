@@ -44,6 +44,7 @@ ArtisanChat.init = function (chat) {
     $._widget.show();
 
     var template = this.loadConversation(chat, null);
+    $._widget.find(".spin-it").remove();
     if (template.length)
         $._widget.find(".direct-chat-messages").prepend($("<a class='prev-msg' href='#'><i class='fa fa-arrow-up'></i> Load More Messages<br/><span class='fa fa-spinner fa-spin'></span></a>"));
 
@@ -266,6 +267,18 @@ ArtisanChat.receiveMessage = function (data) {
 
         $._widget.find(".direct-chat-messages").append(template);
         $._widget.find(".seen-mark").remove();
+    }
+
+    /*
+     * 
+     * Show the message on the dropdown
+     * 
+     */
+    var li = $("li.chat-start[data-id='" + key + "']");
+    if (li.length) {
+        li.find("p").text(data.message);
+        li.find("h4 small").html("<i class='fa fa-clock-o'></i>Now");
+
     }
 
     Artisan.titleMarquee(data.name + ' Messaged you');

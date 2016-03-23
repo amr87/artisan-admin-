@@ -97,3 +97,18 @@ Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
     Route::get('/permissions/{id}/delete', ['uses' => 'PermissionsController@destroy']);
     Route::resource('permissions', 'PermissionsController');
 });
+
+
+/*
+ * 
+ * View Composer
+ * 
+ */
+
+View::composer('messages',function($view){
+    // if(Session::has('user_id')){
+         dd("Sds");
+     //}
+    $view->with('messagesCount',$count);
+    
+});

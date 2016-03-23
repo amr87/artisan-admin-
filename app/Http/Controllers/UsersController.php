@@ -474,6 +474,10 @@ class UsersController extends Controller {
                 $message->sent_at = \Carbon\Carbon::parse($message->sent_at)->isToday() ?
                         \Carbon\Carbon::parse($message->sent_at)->format('g:i A') :
                         \Carbon\Carbon::parse($message->sent_at)->format('d M g:i A');
+                
+                 $message->seen_at = \Carbon\Carbon::parse($message->seen_at)->isToday() ?
+                        \Carbon\Carbon::parse($message->seen_at)->format('g:i A') :
+                        \Carbon\Carbon::parse($message->seen_at)->format('d M g:i A');
 
 
                 $message->mine = $message->from_id == $id ? true : false;

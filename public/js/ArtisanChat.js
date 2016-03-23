@@ -59,11 +59,11 @@ ArtisanChat.init = function (chat) {
     $._widget.find('input#message').typing({
         start: function (event, $elem) {
             var client = $elem.parent().parent().parent().parent().data("client");
-            socket.emit('typing', {client: client, senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
+            socket.emit('typing', {user_id: $._widget.data("id"),client: client, senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
         },
         stop: function (event, $elem) {
             var client = $elem.parent().parent().parent().parent().data("client");
-            socket.emit('untyping', {client: client, senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
+            socket.emit('untyping', {user_id: $._widget.data("id"),client: client, senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
         },
         delay: 400
     });
@@ -130,6 +130,9 @@ ArtisanChat.loadConversation = function (chat, threshold) {
                         template += "<img class='direct-chat-img' src='" + response[i].sender.avatar + "' alt='Message User Image'>\n";
                         template += "<div class='direct-chat-text'>\n";
                         template += response[i].text + "\n";
+                        if(response[i].seen == "1" && i == (response.length -1)){
+                            template +="<p class='seen-mark'><i class='fa fa-eye'></i> At "+response[i].seen_at+"</p>";
+                        }
                         template += " </div>\n";
                         template += "</div>"
 
@@ -375,7 +378,7 @@ ArtisanChat.setSeen = function (obj) {
                                 $(".direct-chat-msg[data-id = '" + data[j].id + "']").attr("data-seen", "1");
                             }
                             var senderClient = Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client");
-                            socket.emit('seen', {client: $(current).data("client"), senderId: senderClient, msg_id: data[j - 1].id, msg_seen: data[j - 1].seen_at});
+                            socket.emit('seen', {user_id: $(current).data("id"),client: $(current).data("client"), senderId: senderClient, msg_id: data[j - 1].id, msg_seen: data[j - 1].seen_at});
                         }
                     },
                     complete: function () {

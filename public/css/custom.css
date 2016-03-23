@@ -216,3 +216,7 @@ li.messages-menu ul li.spinner
     text-align: center;
     margin-top:85px;
 }
+
+span.direct-chat-timestamp{
+    margin-left:10px;
+}

@@ -1,3 +1,4 @@
+@inject('stat','App\HeaderStats')
 <header class="main-header">
 
     <!-- Logo -->
@@ -22,7 +23,7 @@
                     <!-- Menu toggle button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-envelope-o"></i>
-                        <span class="label label-success">0</span>
+                        <span class="label @if($stat->messagesCount() == 0) label-success @else label-danger @endif">{{$stat->messagesCount()}}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <li></li>

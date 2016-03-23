@@ -104,6 +104,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Underscore JS -->
         <script src="{{asset('js/underscorejs.min.js')}}"></script>
 
+        <!-- JQuery Visible plugin -->
+        <script src="{{asset('js/jquery.visible.min.js')}}"></script>
+        
+        <!-- JQuery Typing plugin -->
+        <script src="{{asset('js/jquery.typing.min.js')}}"></script>
+
         <!-- Noty -->
         <script src="{{asset('js/noty.js')}}"></script>
 

@@ -8,29 +8,6 @@
     @include('admin/messages')
     <!-- Small boxes (Stat box) -->
     <div class="row">
-        <div class="users-online col-lg-12 col-xs-12 col-md-12">
-            <div class="box box-success box-solid">
-
-                <div class="box-header with-border">
-                    <h3 class="box-title">Users Online</h3>
-
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                    <!-- /.box-tools -->
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-
-                </div>
-                <div class="overlay">
-                    <i class="fa fa-refresh fa-spin"></i>
-                </div>
-                <!-- /.box-body -->
-
-            </div>
-        </div>
         <div class="col-lg-3 col-xs-6">
 
             <div class="small-box bg-aqua">

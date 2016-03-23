@@ -132,10 +132,10 @@ $(function () {
         checkboxClass: 'icheckbox_flat-green',
     });
     $('input[type="checkbox"].flat-red').iCheck('uncheck');
-    $('input[type="checkbox"].flat-red').on('ifChecked', function (event) {
+    $('input[type="checkbox"].flat-red').on('ifChecked', function () {
         $('div.show-roles').slideDown();
     });
-    $('input[type="checkbox"].flat-red').on('ifUnchecked', function (event) {
+    $('input[type="checkbox"].flat-red').on('ifUnchecked', function () {
         $('div.show-roles').slideUp();
     });
 });

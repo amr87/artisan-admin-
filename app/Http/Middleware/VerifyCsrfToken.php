@@ -15,5 +15,6 @@ class VerifyCsrfToken extends BaseVerifier
         '/admin/users/upload/*',
         '/admin/users/flushSession',
         '/post-message',
+        '/message-seen',
     ];
 }

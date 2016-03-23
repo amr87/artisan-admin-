@@ -462,7 +462,7 @@ class UsersController extends Controller {
         $id = $request->session()->get('user_id');
 
         $response = (array)
-                \API::get('messages/get-conversation/' . $id . '/' . Input::get('to'), ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id , 'limit' => Input::get('skip')]);
+                \API::get('messages/get-conversation/' . $id . '/' . Input::get('to'), ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id, 'limit' => Input::get('skip')]);
 
         if ($response['code'] == 200) {
 
@@ -472,14 +472,14 @@ class UsersController extends Controller {
                 unset($message->receiver->token);
 
                 $message->sent_at = \Carbon\Carbon::parse($message->sent_at)->isToday() ?
-                        \Carbon\Carbon::parse($message->sent_at)->format('g:i A'):
+                        \Carbon\Carbon::parse($message->sent_at)->format('g:i A') :
                         \Carbon\Carbon::parse($message->sent_at)->format('d M g:i A');
-                        
-              
+
+
                 $message->mine = $message->from_id == $id ? true : false;
 
                 $message->receiver->avatar = UsersTrait::getAvatar($message->receiver);
-                
+
                 $message->sender->avatar = UsersTrait::getAvatar($message->sender);
             }
 
@@ -495,7 +495,53 @@ class UsersController extends Controller {
         $message = Input::get('message');
         $to = Input::get('to');
 
-        \API::post('messages/create', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id, 'to_id' => $to, 'text' => $message]);
+        $response = \API::post('messages/create', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id, 'to_id' => $to, 'text' => $message]);
+
+        echo $response['code'] == 201 ? json_encode(["id" => $response["data"]->id]) : json_encode(['id' => 0]);
+    }
+    
+    public function seenMessage(Request $request) {
+        
+        $id = $request->session()->get('user_id');
+
+        $messageID = Input::get('id');
+    
+
+        $response = \API::post('messages/seen/'.$messageID, ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id, '_method' => 'PUT']);
+
+        echo $response['code'] == 200 ? json_encode(["id" => $response["data"]->id , 'seen_at' => $response['data']->seen_at]) : json_encode(['id' => 0 , 'seen_at' => null]);
+    }
+
+    public function userConversation(Request $request) {
+        
+        $id = $request->session()->get('user_id');
+        $token = $request->session()->get('user_data')['auth'];
+
+        $response = \API::get('conversation/user/' . $id, ['Authorization' => $token], ['ID' => $id]);
+        $conversations = $response['code'] == 200 ? $response["data"] : [];
+
+        if ($response['code'] == 200) {
+            foreach ($conversations as $conversation) {
+
+                $message = $conversation->messages[0];
+
+                unset($message->sender->token);
+                unset($message->receiver->token);
+
+                $message->sent_at = \Carbon\Carbon::parse($message->sent_at)->isToday() ?
+                        \Carbon\Carbon::parse($message->sent_at)->format('g:i A') :
+                        \Carbon\Carbon::parse($message->sent_at)->format('d M g:i A');
+
+
+                $message->mine = $message->from_id == $id ? true : false;
+
+                $message->receiver->avatar = UsersTrait::getAvatar($message->receiver);
+
+                $message->sender->avatar = UsersTrait::getAvatar($message->sender);
+            }
+        }
+
+        echo json_encode($conversations);
     }
 
 }

@@ -74,24 +74,44 @@ div.container { max-width: 1200px !important; }
     margin-top: 20%;
 }
 
+ul#online-users{
+    padding: 0;
+    margin: 0;
+}
+
 ul#online-users li{
     list-style: none;
-    display: inline-block;
-    margin: 0 15px;
+    display: block;
+    border-bottom:1px solid #444;
+    border-top:1px solid #222;
+    padding:5px 0;
+}
+
+ul#online-users li img{
+    float: left;
 }
 
 ul#online-users li a {
     display:block;
-    text-align: left;
-    margin: 5px 0 0 0px ;
+    float: left;
+    margin: 15px 0 0 14px ;
     font-weight: bold;
-    color:#000;
+    color:#fff;
 }
 
 ul#online-users li span{
-    color:green;
+    color:#FFF;
+        float: right;
     cursor: pointer;
-    margin:0 0 0 15px;
+    margin:20px 10px 0 0px;
+}
+
+ul#online-user li:first-child{
+    border-top:none !important;
+}
+
+div.users-online h3{
+    padding: 0 10px;
 }
 
 .chat-area{
@@ -159,4 +179,9 @@ a.prev-msg span{
     display:none;
     color:green;
     font-size: 20px;
+}
+
+ul.conversation-holder{
+    height:200px;
+    overflow-y: scroll;
 }

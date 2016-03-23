@@ -38,7 +38,7 @@ ArtisanChat.init = function (chat) {
 
     $._widget.attr("data-id", $(chat).data('id'));
 
-    ArtisanChat.chattingWith = $(chat).prev().text();
+    ArtisanChat.chattingWith = $(chat).get(0).nodeName == "SPAN" ? $(chat).prev().text() : $(chat).data("with");
 
     $._widget.find(".chat-with").text(this.chattingWith);
 
@@ -85,12 +85,12 @@ ArtisanChat.build = function (data) {
 }
 
 
-ArtisanChat.loadConversation = function (chat, skip) {
+ArtisanChat.loadConversation = function (chat, threshold) {
 
     var template = "";
 
     var id = _.isObject(chat) ? chat.data('id') : chat;
-    var skip = skip === null ? 0 : skip;
+    var skip = threshold === null ? 0 : threshold;
 
     $.ajax({
         url: '/get-conversation',
@@ -104,7 +104,7 @@ ArtisanChat.loadConversation = function (chat, skip) {
                 for (var i = 0; i < response.length; i++) {
 
                     if (response[i].mine) {
-                        template += "<div class='direct-chat-msg'>\n";
+                        template += "<div data-mine='1' data-seen='" + response[i].seen + "' class='direct-chat-msg'>\n";
                         template += "<div class='direct-chat-info clearfix'>\n";
                         template += " <span class='direct-chat-name pull-left'>" + response[i].sender.display_name + "</span>\n";
                         template += "<span class='direct-chat-timestamp pull-right'>" + response[i].sent_at + "</span>\n";
@@ -116,7 +116,7 @@ ArtisanChat.loadConversation = function (chat, skip) {
                         template += "</div>"
 
                     } else {
-                        template += "<div class='direct-chat-msg right'>\n";
+                        template += "<div data-mine='0' data-seen='" + response[i].seen + "' class='direct-chat-msg right'>\n";
                         template += "<div class='direct-chat-info clearfix'>\n";
                         template += " <span class='direct-chat-name pull-right'>" + response[i].sender.display_name + "</span>\n";
                         template += "<span class='direct-chat-timestamp pull-left'>" + response[i].sent_at + "</span>\n";
@@ -132,6 +132,7 @@ ArtisanChat.loadConversation = function (chat, skip) {
 
         }});
 
+    liveScrollListener();
 
     return template;
 
@@ -168,7 +169,7 @@ ArtisanChat.sendMessage = function (object) {
 
 
     var template = "";
-    template += "<div class='direct-chat-msg'>\n";
+    template += "<div data-seen='1' data-mine='1' class='direct-chat-msg'>\n";
     template += "<div class='direct-chat-info clearfix'>\n";
     template += " <span class='direct-chat-name pull-left'>" + name + "</span>\n";
     template += "<span class='direct-chat-timestamp pull-left' data-timestamp='" + new Date().getTime() + "'>Now</span>\n";
@@ -182,13 +183,19 @@ ArtisanChat.sendMessage = function (object) {
     _widget.find(".direct-chat-messages").append(template);
     _widget.find(".direct-chat-messages").animate({'scrollTop': _widget.find(".direct-chat-messages").get(0).scrollHeight + "px"});
 
-    //emit message
-    socket.emit('message', {message: message, client: client, user_id: id, name: name, avatar: avatar, senderId: senderId, sclient: senderClient});
-
-
 
     // save message
-    $.post('/post-message', {to: id, message: message}, function () {});
+    $.post('/post-message', {to: id, message: message}, function (response) {
+        var data = JSON.parse(response);
+        if (data.id != 0) {
+            //emit message
+            socket.emit('message', {message: message, client: client, user_id: id, name: name, avatar: avatar, senderId: senderId, sclient: senderClient, msg_id: data.id});
+        }
+    });
+
+
+
+
 
     // clear message input
     $(object).parent().prev().val("");
@@ -211,6 +218,7 @@ ArtisanChat.receiveMessage = function (data) {
 
     var pos = $('.chat-area').length > 1 ? (($('.chat-area').length - 1) * parseInt($('.chat-area').width()) + 20) + "px" : '0px';
 
+    var template = "";
     if (!Current.length) {
 
         $._widget = this.holder.clone();
@@ -220,19 +228,19 @@ ArtisanChat.receiveMessage = function (data) {
 
         $._widget.appendTo($('body'));
 
-        $._widget.find(".direct-chat-messages").append(template);
+
         $._widget.find(".chat-with").text(data.name);
         $._widget.attr("data-client", data.sclient);
         $._widget.attr("data-id", data.senderId);
-        var template = "";
 
-        template += "<div class='direct-chat-msg right'>\n";
+
+        template += "<div data-seen='0' data-mine='0' data-id='" + data.msg_id + "' class='direct-chat-msg right'>\n";
         template += "<div class='direct-chat-info clearfix'>\n";
         template += " <span class='direct-chat-name pull-right'>" + data.name + "</span>\n";
         template += "<span class='direct-chat-timestamp pull-left' data-timestamp='" + new Date().getTime() + "'>Now</span>\n";
         template += "</div>\n";
         template += "<img class='direct-chat-img' src='" + data.avatar + "' alt='Message User Image'>\n";
-        template += "<div class='direct-chat-text'>\n";
+        template += "<div class='direct-chat-text' style='height:30px !important'>\n";
         template += data.message + "\n";
         template += " </div>\n";
         template += "</div>"
@@ -241,6 +249,7 @@ ArtisanChat.receiveMessage = function (data) {
         $._widget.find(".direct-chat-messages").append(template);
         $._widget.show();
 
+
     } else {
 
         $._widget = Current;
@@ -248,15 +257,13 @@ ArtisanChat.receiveMessage = function (data) {
 
         $._widget.find('.box-header').addClass("redish");
 
-        var template = "";
-
-        template += "<div class='direct-chat-msg right'>\n";
+        template += "<div data-seen='0'  data-mine='0' data-id='" + data.msg_id + "' class='direct-chat-msg right'>\n";
         template += "<div class='direct-chat-info clearfix'>\n";
         template += " <span class='direct-chat-name pull-right'>" + data.name + "</span>\n";
         template += "<span class='direct-chat-timestamp pull-left' data-timestamp='" + new Date().getTime() + "'>Now</span>\n";
         template += "</div>\n";
         template += "<img class='direct-chat-img' src='" + data.avatar + "' alt='Message User Image'>\n";
-        template += "<div class='direct-chat-text'>\n";
+        template += "<div class='direct-chat-text' style='height:30px !important'>\n";
         template += data.message + "\n";
         template += " </div>\n";
         template += "</div>"
@@ -264,8 +271,8 @@ ArtisanChat.receiveMessage = function (data) {
             $._widget.find(".direct-chat-messages").prepend($("<a class='prev-msg' href='#'><i class='fa fa-arrow-up'></i> Load More Messages<br/><span class='fa fa-spinner fa-spin'></span></a>"));
 
         var hasScroll = Artisan.hasScrollBar($._widget.find('.direct-chat-messages'));
-        var scrolled = Artisan.scolledDown($._widget.find('.direct-chat-messages'));
-        if (hasScroll && !scrolled) {
+        var scrolled = Artisan.scrolledDown($._widget.find('.direct-chat-messages'));
+        if (hasScroll && !scrolled && !$._widget.find("span.new-messages").length) {
             var alert = $("span.new-messages").clone();
             alert.prependTo($._widget.find('.box-body'))
                     .fadeIn();
@@ -275,6 +282,41 @@ ArtisanChat.receiveMessage = function (data) {
         $._widget.find(".direct-chat-messages").append(template);
 
     }
+    
+    Artisan.titleMarquee(data.name + ' Messaged you');
+    // this.setSeen(template, data);
+
+    liveScrollListener();
+    
+        var current, parent, up;
+
+    $._widget.on("mouseenter", function () {
+        var textChat = $(this).find(".direct-chat-msg");
+        parent = $(this);
+        textChat.each(function () {
+            current = $(this);
+            console.log($(this).data("mine") + " | " + $(this).data("seen"));
+            if (
+                    current.data("mine") == "0" &&
+                    current.data("seen") == "0") {
+              
+                $.ajax({
+                    url: '/message-seen',
+                    type: 'POST',
+                    cache: false,
+                    data: {id: current.data("id")},
+                    success: function (response) {
+                        var res = JSON.parse(response);
+                        if (res.id != 0) {
+                            current.attr("data-seen", "1");
+                            socket.emit('seen', {client: parent.data("client"), msg_id: res.id, msg_seen: res.seen_at});
+                        }
+                    }});
+            }
+
+        });
+
+    })
 
 }
 
@@ -325,6 +367,26 @@ ArtisanChat.RePosition = function (action, widget) {
             }
         });
 
+    }
+
+}
+
+ArtisanChat.setSeen = function (template, data) {
+    $(window).focus();
+    var heights = $('.direct-chat-messages').find('.direct-chat-text').length * 15;
+    console.log(heights);
+    if (heights <= 45) {
+        $.ajax({
+            url: '/message-seen',
+            type: 'POST',
+            data: {id: data.msg_id},
+            async: false,
+            success: function (response) {
+                var res = JSON.parse(response);
+                if (res.id != 0) {
+                    socket.emit('seen', {client: data.sclient, msg_id: res.id, msg_seen: res.seen_at});
+                }
+            }});
     }
 
 }

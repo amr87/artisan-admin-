@@ -42,9 +42,13 @@ Route::get('/get-conversation', ['uses' => 'UsersController@getConversation','mi
 
 Route::post('/post-message', ['uses' => 'UsersController@postMessage','middleware' => 'web']);
 
+Route::post('/message-seen', ['uses' => 'UsersController@seenMessage','middleware' => 'web']);
+
 Route::post('/reset-password', ['uses' => 'UsersController@processForgetPassword', 'middleware' => 'web']);
 
 Route::get('/reset-password', ['uses' => 'UsersController@resetPassword', 'middleware' => 'web']);
+
+Route::get('/user-conversations', ['uses' => 'UsersController@userConversation', 'middleware' => 'web']);
 
 
 /*

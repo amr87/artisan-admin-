@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 
+
 class AppServiceProvider extends ServiceProvider {
 
     /**
@@ -13,6 +14,7 @@ class AppServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot() {
+
         Blade::directive('check', function($expression) {
             return "<?php if (\Policy::check($expression)->decide()): ?>";
         });
@@ -22,12 +24,14 @@ class AppServiceProvider extends ServiceProvider {
         });
 
         Blade::directive('inArray', function($needle) {
-            return "<?php if (@in_array(".$needle[0].",".$needle[1].")): ?>";
+            return "<?php if (@in_array(" . $needle[0] . "," . $needle[1] . ")): ?>";
         });
 
         Blade::directive('endinArray', function($expression) {
             return "<?php endif; ?>";
         });
+ 
+
     }
 
     /**

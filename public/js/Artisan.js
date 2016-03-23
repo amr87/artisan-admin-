@@ -48,17 +48,17 @@ Artisan.hasScrollBar = function (elem) {
         return;
     }
 
-    return $(elem).get(0).scrollHeight  > $(elem).get(0).clientHeight;
+    return $(elem).get(0).scrollHeight > $(elem).get(0).clientHeight;
 }
 
-Artisan.scolledDown = function (elem) {
+Artisan.scrolledDown = function (elem) {
     if (!_.isObject(elem)) {
         console.error('You must pass elem as an object.');
         alert('Sorry, something went terribly wrong, please refresh the page and try again.');
         return;
     }
 
-    return  $(elem).get(0).scrollHeight - $(elem).scrollTop() == $(elem).outerHeight() ;
+    return  $(elem).get(0).scrollHeight - $(elem).scrollTop() == $(elem).outerHeight();
 }
 
 
@@ -86,3 +86,36 @@ Artisan.Notification = function (props) {
         }
     });
 }
+
+Artisan.titleMarquee = function (text) {
+    document.title = text;
+    var documentTitle = document.title + " - ";
+
+    (function titleMarquee() {
+        document.title = documentTitle = documentTitle.substring(1) + documentTitle.substring(0, 1);
+        setTimeout(titleMarquee, 200);
+    })();
+}
+
+
+
+var vis = (function () {
+    var stateKey, eventKey, keys = {
+        hidden: "visibilitychange",
+        webkitHidden: "webkitvisibilitychange",
+        mozHidden: "mozvisibilitychange",
+        msHidden: "msvisibilitychange"
+    };
+    for (stateKey in keys) {
+        if (stateKey in document) {
+            eventKey = keys[stateKey];
+            break;
+        }
+    }
+    return function (c) {
+        if (c)
+            document.addEventListener(eventKey, c);
+        return !document[stateKey];
+    }
+})();
+

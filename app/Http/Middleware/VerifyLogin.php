@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Support\Facades\Session;
 use App\UsersTrait as UsersTrait;
 
+
 class VerifyLogin {
 
     protected $except = ['login', 'logout', 'reset-password', 'facebook', 'facebook/callback'];
@@ -30,7 +31,7 @@ class VerifyLogin {
                         return redirect('/admin');
                     }
                     return redirect('/login');
-                } 
+                }
             } elseif (Session::has('user_id') && $request->getRequestUri() == "/login") {
                 return redirect('/admin');
             }

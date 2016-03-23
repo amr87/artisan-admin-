@@ -39,11 +39,6 @@ $(function () {
         ArtisanChat.setSeen($(this));
     });
     
-    // mobile
-    $("body").delegate(".chat-area", "touchstart", function () {
-        ArtisanChat.setSeen($(this));
-    });
-
 
     $("body").delegate("a.prev-msg", "click", function () {
         ArtisanChat.loadPreviousMessages($(this));
@@ -57,7 +52,7 @@ $(function () {
 
 
     $("li.messages-menu").on("click", function () {
-        $(this).find("span").text(0);
+        $(this).find("span").removeClass("label-danger").addClass("label-success").text(0);
         Artisan.resetDocumentTitle();
     });
 

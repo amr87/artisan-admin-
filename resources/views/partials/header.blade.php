@@ -26,7 +26,7 @@
                     </a>
                     <ul class="dropdown-menu" style="min-height:150px;">
                         <li></li>
-                        <li><i class='fa fa-spin fa-spinner'></i></li>
+                        <li style="text-align: center;margin-top:75px;"><i class='fa fa-spin fa-spinner'></i></li>
                     </ul>
                 </li>
                 <!-- /.messages-menu -->

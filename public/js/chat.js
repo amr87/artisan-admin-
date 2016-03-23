@@ -38,6 +38,11 @@ $(function () {
     $("body").delegate(".chat-area", "mouseover", function () {
         ArtisanChat.setSeen($(this));
     });
+    
+    // mobile
+    $("body").delegate(".chat-area", "touchstart", function () {
+        ArtisanChat.setSeen($(this));
+    });
 
 
     $("body").delegate("a.prev-msg", "click", function () {

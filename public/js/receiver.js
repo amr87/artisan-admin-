@@ -59,7 +59,7 @@ socket.on('typing', function (data) {
     var currentChat = $(".chat-area[data-client='" + data.senderClient + "']");
     if (currentChat.length) {
         typing.html("<i class='fa fa-pencil'></i> typing....");
-        typing.appendTo(currentChat.find(".direct-chat-messages"));
+        typing.insertAfter(currentChat.find(".direct-chat-text:last"));
     }
 });
 

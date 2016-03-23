@@ -24,9 +24,9 @@
                         <i class="fa fa-envelope-o"></i>
                         <span class="label label-success">0</span>
                     </a>
-                    <ul class="dropdown-menu" style="min-height:150px;">
+                    <ul class="dropdown-menu">
                         <li></li>
-                        <li style="text-align: center;margin-top:75px;"><i class='fa fa-spin fa-spinner'></i></li>
+                        <li class="spinner"><i class='fa fa-spin fa-spinner'></i></li>
                     </ul>
                 </li>
                 <!-- /.messages-menu -->

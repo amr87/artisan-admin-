@@ -222,3 +222,12 @@ li.messages-menu ul li.spinner
 span.direct-chat-timestamp{
     margin-left:10px;
 }
+
+div.noty_message .noty_text p {
+    color:#000;
+    margin-top:10px;
+}
+
+div.noty_message .noty_text img{
+    margin-right: 10px !important;
+}

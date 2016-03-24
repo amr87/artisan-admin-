@@ -76,7 +76,7 @@ Artisan.Notification = function (props) {
         text: props.text,
         type: props.type,
         dismissQueue: true,
-        layout: 'bottomRight',
+        layout: 'bottomLeft',
         closeWith: ['click'],
         theme: 'relax',
         maxVisible: 10,

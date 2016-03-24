@@ -1,7 +1,7 @@
 <!-- SOCKET IO -->
 <script src="{{asset('js/socket.io.js')}}"></script>
 <script>
-var socket = new io.connect("{{getenv('SOCKET_URL')}}", {reconnect: true});
+var socket = new io.connect("{{getenv('SOCKET_URL')}}", {forceNew: true});
 </script>
 <script src="{{asset('js/receiver.js')}}"></script>
 @if(Session::get('user_id'))

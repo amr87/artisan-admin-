@@ -39,10 +39,11 @@ socket.on('user-ban', function (data) {
 });
 
 socket.on('seen', function (data) {
+
 // data.msg_seen
     var seen = $("<p/>");
     seen.addClass("seen-mark");
-    var currentChat = $(".chat-area[data-client='" + data.senderId + "']");
+    var currentChat = $(".chat-area[data-id='" + data.user_id + "']");
     if (currentChat.length) {
         //currentChat.find(".seen-mark").remove();
         seen.html("<i class='fa fa-eye'></i> At " + data.msg_seen);
@@ -56,7 +57,7 @@ socket.on('typing', function (data) {
 
     var typing = $("<p/>");
     typing.addClass("typing");
-    var currentChat = $(".chat-area[data-client='" + data.senderClient + "']");
+    var currentChat = $(".chat-area[data-id='" + data.user_id + "']");
     if (currentChat.length) {
         if (currentChat.find('p.typing').length)
             currentChat.find('p.typing').remove();
@@ -66,7 +67,7 @@ socket.on('typing', function (data) {
 });
 
 socket.on('untyping', function (data) {
-    var currentChat = $(".chat-area[data-client='" + data.senderClient + "']");
+    var currentChat = $(".chat-area[data-id='" + data.user_id + "']");
     if (currentChat.find('p.typing').length)
         currentChat.find(".typing").remove();
 
@@ -74,6 +75,8 @@ socket.on('untyping', function (data) {
 
 
 socket.on('connectedUser', function (json) {
+    
+     socket.io.reconnect();
 
     $("div.users-online").find(".control-sidebar-heading").html(" Online Users <strong style='color:yellow'>( " + json.users.length + " )</strong>");
 
@@ -102,4 +105,8 @@ socket.on('connectedUser', function (json) {
     $(".users-online").find(".box-body").html(output);
 
 
+});
+
+socket.on('disconnect',function(){
+     socket.io.reconnect();
 });

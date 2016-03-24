@@ -59,11 +59,11 @@ ArtisanChat.init = function (chat) {
     $._widget.find('input#message').typing({
         start: function (event, $elem) {
             var client = $elem.parent().parent().parent().parent().data("client");
-            socket.emit('typing', {user_id: $._widget.data("id"), client: client, senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
+            socket.emit('typing', {user_id: $("input#myId").val(),target_id:$._widget.data('id'), client: client, senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
         },
         stop: function (event, $elem) {
             var client = $elem.parent().parent().parent().parent().data("client");
-            socket.emit('untyping', {user_id: $._widget.data("id"), client: client, senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
+            socket.emit('untyping', {user_id: $("input#myId").val(),target_id:$._widget.data('id'), client: client, senderClient: Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client")});
         },
         delay: 400
     });
@@ -401,7 +401,7 @@ ArtisanChat.setSeen = function (obj) {
                                 $(".direct-chat-msg[data-id = '" + data[j].id + "']").attr("data-seen", "1");
                             }
                             var senderClient = Artisan.filter($('span.chat-start'), "[data-id='" + $("input#myId").val() + "']").data("client");
-                            socket.emit('seen', {user_id: $(current).data("id"), client: $(current).data("client"), senderId: senderClient, msg_id: data[j - 1].id, msg_seen: data[j - 1].seen_at});
+                            socket.emit('seen', {user_id: $("input#myId").val(),target_id:$._widget.data('id'), client: $(current).data("client"), senderClient: senderClient, msg_id: data[j - 1].id, msg_seen: data[j - 1].seen_at});
                         }
                     },
                     complete: function () {

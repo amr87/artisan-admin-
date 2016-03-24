@@ -18,7 +18,11 @@ ArtisanChat.position = 0;
 
 ArtisanChat.chattingWith = "";
 
+
+
 ArtisanChat.init = function (chat) {
+    
+
 
     if (!_.isObject(chat)) {
         console.error('You must pass props as an object.');
@@ -33,15 +37,16 @@ ArtisanChat.init = function (chat) {
     $._widget = this.build(chat);
 
     $._widget.fadeIn("slow", function () {
+        
         ArtisanChat.count++;
 
         $._widget.attr("data-client", $(chat).data('client'));
 
         $._widget.attr("data-id", $(chat).data('id'));
 
-        ArtisanChat.chattingWith = $(chat).get(0).nodeName == "SPAN" ? $(chat).prev().text() : $(chat).data("with");
+        var text = $(chat).get(0).nodeName == "SPAN" ? $(chat).prev().text() : $(chat).data("with");
 
-        $._widget.find(".chat-with").text(this.chattingWith);
+        $._widget.find(".chat-with").text(text);
 
 
         var template = ArtisanChat.loadConversation(chat, null);

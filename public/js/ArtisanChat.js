@@ -274,11 +274,11 @@ ArtisanChat.receiveMessage = function (data) {
 
         $._widget.find(".direct-chat-messages").append(template);
         $._widget.find(".seen-mark").remove();
-    }
+    } else {
 
     /*
      * 
-     * show notification
+     * show notification if no chat head opened
      */
     var notyclose_id = $("#noty_bottomLeft_layout_container>li:first-child>.noty_bar").attr('id');
     var noty_list_count = $("#noty_bottomLeft_layout_container li").size();
@@ -295,6 +295,7 @@ ArtisanChat.receiveMessage = function (data) {
         }
     });
 
+    }
     /*
      * 
      * Show the message on the dropdown
@@ -302,6 +303,9 @@ ArtisanChat.receiveMessage = function (data) {
      */
     var li = $("li.chat-start[data-id='" + key + "']");
     if (li.length) {
+        if(!li.hasClass('pale-red'))
+            li.addClass('pale-red');
+        
         li.find("p").text(data.message);
         li.find("h4 small").html("<i class='fa fa-clock-o'></i>Now");
 

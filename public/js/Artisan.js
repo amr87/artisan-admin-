@@ -110,6 +110,8 @@ Artisan.resetDocumentTitle = function () {
 
     window.clearTimeout(marqueeTitle);
     document.title = originalTitle;
-    if (parseInt($("li.messages-menu").find("span").text()) > 0)
+    if (parseInt($("li.messages-menu").find("span").text()) > 0) {
         $("li.messages-menu").find("span").text(parseInt($("li.messages-menu").find("span").text()) - 1);
+    }
+    $("li.messages-menu").find("span").removeClass("label-danger").addClass("label-success");
 }

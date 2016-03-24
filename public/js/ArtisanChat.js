@@ -286,7 +286,8 @@ ArtisanChat.receiveMessage = function (data) {
         $.noty.close(notyclose_id);
     Artisan.Notification({
         text: "<img class= 'direct-chat-img' src='" + data.avatar + "'/>\n\
-                <p>" + data.name + " says: <strong><i>" + data.message + "</i></strong></p><div style='clear:both'</div>",
+                <p><i class='fa fa-envelope'></i> <strong>" + data.name + " </strong> sent you a message.</p><div style='clear:both'</div>\n\
+                ",
         type: 'success',
         animation: {
             open: 'zoomIn',

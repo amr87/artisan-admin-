@@ -130,7 +130,7 @@ ArtisanChat.loadConversation = function (chat, threshold) {
                         template += "<img class='direct-chat-img' src='" + response[i].sender.avatar + "' alt='Message User Image'>\n";
                         template += "<div class='direct-chat-text'>\n";
                         template += response[i].text + "\n";
-                        if (response[i].seen == "1" && i == (response.length - 1)) {
+                        if (response[i].seen == "1" && i == (response.length - 1) && skip == 0) {
                             template += "<p class='seen-mark'><i class='fa fa-eye'></i> At " + response[i].seen_at + "</p>";
                         }
                         template += " </div>\n";

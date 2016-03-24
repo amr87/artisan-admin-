@@ -441,10 +441,10 @@ ArtisanChat.loadUserConversations = function () {
 
                 if (data[i]['messages'][0]['mine']) {
                     var selector = $("span.chat-start[data-id='" + data[i]['messages'][0]['receiver']['id'] + "']");
-                    var seen = data[i]['messages'][0]['seen'] == "1" ? '' : 'pale-red';
+                    
                     var client = selector.length ? selector.data('client') : null;
                     var seenIcon = data[i]['messages'][0]['seen'] == "1" ? "<i class='fa fa-eye'></i>" : "";
-                    output += " <li data-with='" + data[i]['messages'][0]['receiver']['display_name'] + "' class='chat-start " + seen + "' data-id='" + data[i]['messages'][0]['receiver']['id'] + "' data-client='" + client + "'> <a href='#'><div class='pull-left'>";
+                    output += " <li data-with='" + data[i]['messages'][0]['receiver']['display_name'] + "' class='chat-start' data-id='" + data[i]['messages'][0]['receiver']['id'] + "' data-client='" + client + "'> <a href='#'><div class='pull-left'>";
                     output += " <img src='" + data[i]['messages'][0]['receiver']['avatar'] + "' class='img-circle' alt='User Image'></div> <h4>\n\
                                                              " + data[i]['messages'][0]['receiver']['display_name'] + " \n\
                                                                 <small><i class='fa fa-clock-o'></i> \n\

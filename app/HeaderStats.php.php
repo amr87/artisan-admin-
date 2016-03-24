@@ -20,7 +20,7 @@ class HeaderStats {
             $conversations = $response["data"];
            
             foreach ($conversations as $conversation) {
-                if ($conversation->messages[0]->seen == "0")
+                if ($conversation->messages[0]->seen == "0" && $conversation->messages[0]->to_id == $id)
                     $count++;
             }
         }

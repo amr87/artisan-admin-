@@ -75,8 +75,6 @@ socket.on('untyping', function (data) {
 
 
 socket.on('connectedUser', function (json) {
-    
-     socket.io.reconnect();
 
     $("div.users-online").find(".control-sidebar-heading").html(" Online Users <strong style='color:yellow'>( " + json.users.length + " )</strong>");
 

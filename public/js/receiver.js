@@ -104,7 +104,3 @@ socket.on('connectedUser', function (json) {
 
 
 });
-
-socket.on('disconnect',function(){
-     socket.io.reconnect();
-});

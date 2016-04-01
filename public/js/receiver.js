@@ -75,7 +75,6 @@ socket.on('untyping', function (data) {
 
 
 socket.on('connectedUser', function (json) {
-    console.log(json);
 
     $("div.users-online").find(".control-sidebar-heading").html(" Online Users <strong style='color:yellow'>( " + json.users.length + " )</strong>");
 
@@ -102,11 +101,5 @@ socket.on('connectedUser', function (json) {
 
     $(".users-online").find(".overlay").remove();
     $(".users-online").find(".box-body").html(output);
-    
-    if(typeof(json.client) != "undefined"){
-        console.log(client);
-        $.get('/update-last-seen',{client:client},function(){})
-    }
-
 
 });

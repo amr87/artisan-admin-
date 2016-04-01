@@ -25,7 +25,9 @@
                 </div>
 
                 <h3 class="profile-username text-center">{{$user->display_name}}</h3>
-
+                @if($active)
+                <p class="text-muted text-center">Last Seen: <i class="fa fa-clock-o"> {{$active}}</i></p>
+                @endif
                 <p class="text-muted text-center">{{$user->bio}}</p>
 
                 <ul class="list-group list-group-unbordered">

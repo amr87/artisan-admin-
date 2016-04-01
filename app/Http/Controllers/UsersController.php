@@ -95,11 +95,19 @@ class UsersController extends Controller {
             }
         }
 
-        return $user ? \View::make('admin/users/profile')
-                        ->with('page_title', 'Profile')
-                        ->with('user', $user)
-                        ->with('avatar', UsersTrait::getAvatar($user))
-                        ->with('name', $name) : abort(404);
+        if ($user) {
+            $last_seen = \App\User::where('user_id', $user->id)->select('last_seen')->get();
+            $active = !empty($last_seen) && @$last_seen[0]->last_seen != NULL ? \Carbon\Carbon::createFromFormat("Y-m-d H:i:s", $last_seen[0]->last_seen)->diffForHumans():false;
+
+            return \View::make('admin/users/profile')
+            ->with('page_title', 'Profile')
+            ->with('user', $user)
+            ->with('active', $active)
+            ->with('avatar', UsersTrait::getAvatar($user))
+            ->with('name', $name);
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -474,8 +482,8 @@ class UsersController extends Controller {
                 $message->sent_at = \Carbon\Carbon::parse($message->sent_at)->isToday() ?
                         \Carbon\Carbon::parse($message->sent_at)->format('g:i A') :
                         \Carbon\Carbon::parse($message->sent_at)->format('d M g:i A');
-                
-                 $message->seen_at = \Carbon\Carbon::parse($message->seen_at)->isToday() ?
+
+                $message->seen_at = \Carbon\Carbon::parse($message->seen_at)->isToday() ?
                         \Carbon\Carbon::parse($message->seen_at)->format('g:i A') :
                         \Carbon\Carbon::parse($message->seen_at)->format('d M g:i A');
 
@@ -509,7 +517,7 @@ class UsersController extends Controller {
         $id = $request->session()->get('user_id');
 
         $messageID = Input::get('id');
-        
+
 
         $response = \API::post('messages/seen', ['Authorization' => $request->session()->get('user_data')['auth']], ['ID' => $id, '_method' => 'PUT', 'id' => $messageID]);
 

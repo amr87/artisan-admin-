@@ -15,6 +15,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->integer('user_id');
             $table->string('client_id',256);
+            $table->datetime('last_seen')->nullable();
         });
     }
 

@@ -84,10 +84,11 @@ trait UsersTrait {
             if (empty($user)) {
                 $user = \DB::table('users')->insert([
                     'user_id' => $user_id,
-                    'client_id' => $client_id
+                    'client_id' => $client_id,
+                    'last_seen' => \Carbon\Carbon::now()
                 ]);
             } else {
-                \DB::table('users')->where('user_id', $user_id)->update(['client_id' => $client_id]);
+                \DB::table('users')->where('user_id', $user_id)->update(['client_id' => $client_id ,'last_seen' => \Carbon\Carbon::now()]);
             }
         }
 

@@ -21,8 +21,8 @@ Route::get('/', function () {
  *  
  */
 
-Route::get('/facebook',[ 'uses'=> 'UsersController@redirectToProvider', 'middleware' => 'web']);
-Route::get('/facebook/callback', [ 'uses'=>'UsersController@handleProviderCallback', 'middleware' => 'web']);
+Route::get('/facebook', [ 'uses' => 'UsersController@redirectToProvider', 'middleware' => 'web']);
+Route::get('/facebook/callback', [ 'uses' => 'UsersController@handleProviderCallback', 'middleware' => 'web']);
 
 
 /*
@@ -38,11 +38,11 @@ Route::post('/login', ['uses' => 'UsersController@processLogin', 'middleware' =>
 
 Route::get('/forget-password', ['uses' => 'UsersController@forgetPassword']);
 
-Route::get('/get-conversation', ['uses' => 'UsersController@getConversation','middleware' => 'web']);
+Route::get('/get-conversation', ['uses' => 'UsersController@getConversation', 'middleware' => 'web']);
 
-Route::post('/post-message', ['uses' => 'UsersController@postMessage','middleware' => 'web']);
+Route::post('/post-message', ['uses' => 'UsersController@postMessage', 'middleware' => 'web']);
 
-Route::post('/message-seen', ['uses' => 'UsersController@seenMessage','middleware' => 'web']);
+Route::post('/message-seen', ['uses' => 'UsersController@seenMessage', 'middleware' => 'web']);
 
 Route::post('/reset-password', ['uses' => 'UsersController@processForgetPassword', 'middleware' => 'web']);
 
@@ -96,4 +96,39 @@ Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
     Route::get('/permissions/dataTables', ['uses' => 'PermissionsController@dataTables']);
     Route::get('/permissions/{id}/delete', ['uses' => 'PermissionsController@destroy']);
     Route::resource('permissions', 'PermissionsController');
+
+
+    /*
+     * Countries Route
+     */
+    Route::get('/country/states/{id}', ['uses' => 'CountriesController@getStates']);
+    Route::get('/country/states/{id}/dataTables', ['uses' => 'CountriesController@getStatesDataTable']);
+    Route::get('/countries/dataTables', ['uses' => 'CountriesController@dataTables']);
+    Route::get('/countries/{id}/delete', ['uses' => 'CountriesController@destroy']);
+    Route::resource('countries', 'CountriesController');
+
+
+
+    /*
+     * States Route
+     */
+
+    Route::get('/states/districts/{id}', ['uses' => 'DistrictsController@getDistricts']);
+    Route::get('/states/districts/{id}/dataTables', ['uses' => 'DistrictsController@getDistrictsDataTable']);
+    Route::get('/states/dataTables', ['uses' => 'StatesController@dataTables']);
+    Route::get('/states/{id}/delete', ['uses' => 'StatesController@destroy']);
+
+
+    Route::resource('states', 'StatesController');
+    Route::get('/states/{id}/create', ['uses' => 'StatesController@create']);
+
+
+    /*
+     * Districts Route
+     */
+    Route::get('/districts/dataTables', ['uses' => 'DistrictsController@dataTables']);
+    Route::get('/districts/create/{id}', ['uses' => 'DistrictsController@create']);
+    Route::get('/districts/{id}/delete', ['uses' => 'DistrictsController@destroy']);
+    Route::resource('districts', 'DistrictsController');
+    Route::get('/districts/{id}/create', ['uses' => 'DistrictsController@create']);
 });

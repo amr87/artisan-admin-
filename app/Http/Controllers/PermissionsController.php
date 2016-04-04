@@ -134,7 +134,7 @@ class PermissionsController extends Controller {
 
             $message = "Permission " . $response["data"]->label . ' has been updated';
 
-            return redirect('/admin/permissions')->with('message', $message);
+            return redirect('/admin/permissions')->with('success', $message);
         } else {
 
      

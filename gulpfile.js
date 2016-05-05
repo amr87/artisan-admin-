@@ -12,5 +12,5 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss');
+    mix.scripts(['Artisan.js', 'ArtisanChat.js','receiver.js','chat.js'], 'public/js/chat.js')
 });

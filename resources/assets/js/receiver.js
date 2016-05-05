@@ -87,7 +87,7 @@ socket.on('connectedUser', function (json) {
         var k = Artisan.getKey(json.users[i]);
 
         output += "<li><img class='img-circle' src='" + json.users[i].avatar + "' width='50'/>\n\
-                        <a>" + json.users[i].name + "</a>\n\
+                        <a href='/admin/users/"+k+"'>" + json.users[i].name + "</a>\n\
                         <span title='Chat with " + json.users[i].name + "' data-id='" + k + "'  data-client='" + json.users[i][k] + "' class='fa fa-lg fa-comment chat-start'></span>\n\
                         \n\<div style='clear:both'></div>\n\
                    </li>";

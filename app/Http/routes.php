@@ -131,4 +131,12 @@ Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
     Route::get('/districts/{id}/delete', ['uses' => 'DistrictsController@destroy']);
     Route::resource('districts', 'DistrictsController');
     Route::get('/districts/{id}/create', ['uses' => 'DistrictsController@create']);
+
+
+    /*
+     * Categories Route
+     */
+    Route::get('/categories/dataTables', ['uses' => 'CategoriesController@dataTables']);
+    Route::get('/categories/{id}/delete', ['uses' => 'CategoriesController@destroy']);
+    Route::resource('categories', 'CategoriesController');
 });

@@ -66,27 +66,35 @@
 
                 </ul>
             </li>
-<!--            <li>
-                <a href="#"><i class="fa fa-eye"></i> Throttling <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li>  <a href="{{url('admin/throttling/logins')}}"><i class="fa fa-key"></i> <span> Login Throttling </span></a></li>
-                    <li>  <a  href="{{url('admin/throttling/api')}}"> <i class="fa fa-gear"></i><span> API Throttling </span></a></li>
-                </ul>
-            </li>-->
+            <!--            <li>
+                            <a href="#"><i class="fa fa-eye"></i> Throttling <i class="fa fa-angle-left pull-right"></i></a>
+                            <ul class="treeview-menu">
+                                <li>  <a href="{{url('admin/throttling/logins')}}"><i class="fa fa-key"></i> <span> Login Throttling </span></a></li>
+                                <li>  <a  href="{{url('admin/throttling/api')}}"> <i class="fa fa-gear"></i><span> API Throttling </span></a></li>
+                            </ul>
+                        </li>-->
 
         </ul>
         </li>
-        
+
+        @endcheck
+
+        @check("manage_locations")
+        <li ><a href="{{url('admin/countries')}}"><i class="fa fa-map-marker"></i>Locations<span></span></a> </li>
         @endcheck
 
 
-        @check("manage_news")
-        <li><a href="{{url('admin/news')}}"><i class="fa fa-newspaper-o"></i> <span>News</span></a></li>
+        @check("manage_workshops")
+        <li><a href="#"><i class="fa fa-newspaper-o"></i> <span>Workshops</span></a>
+            <ul class="treeview-menu">
+                <li>  <a  href="{{url('admin/categories')}}"> <i class="fa fa-bars"></i><span> Categories </span></a></li>
+                <li>  <a href="{{url('admin/workshops')}}"><i class="fa fa-gear"></i> <span> Workshops </span></a></li>
+                <li>  <a  href="{{url('admin/reviews')}}"> <i class="fa fa-star"></i><span> Reviews </span></a></li>
+            </ul>
+        </li>
         @endcheck     
 
-        @check("manage_places")
-        <li ><a href="{{url('admin/places')}}"><i class="fa fa-map-marker"></i>Places<span></span></a></li>
-        @endcheck
+
 
         </ul>
         <!-- /.sidebar-menu -->

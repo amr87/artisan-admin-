@@ -3,7 +3,7 @@
 <script>
 var socket = new io.connect("{{getenv('SOCKET_URL')}}");
 </script>
-<script src="{{asset('js/receiver.js')}}"></script>
+
 @if(Session::get('user_id'))
 <script>
 socket.on('connect', function () {

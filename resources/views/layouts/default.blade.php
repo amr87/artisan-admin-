@@ -113,12 +113,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Noty -->
         <script src="{{asset('js/noty.js')}}"></script>
 
-        <!-- Artisan JS -->
-        <script src="{{asset('js/Artisan.js')}}"></script>
-
-        <!-- Artisan JS -->
-        <script src="{{asset('js/ArtisanChat.js')}}"></script>
-
         @include('includes/socket')
 
         <script src="{{asset('js/chat.js')}}"></script>

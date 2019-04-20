@@ -15,9 +15,9 @@ class HeaderStats {
         if ($response['code'] == 200) {
             
             $conversations = $response["data"];
-           
+            
             foreach ($conversations as $conversation) {
-                if ($conversation->messages[0]->seen == "0" && $conversation->messages[0]->to_id == Session::get('user_id'))
+                if (@$conversation->messages[0]->seen == "0" && @$conversation->messages[0]->to_id == Session::get('user_id'))
                     $count++;
             }
         }

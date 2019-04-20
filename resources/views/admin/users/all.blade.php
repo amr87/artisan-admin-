@@ -38,6 +38,9 @@
                 <thead>
                     <tr>
                         <th>Username</th>
+                        @check("manage_companies")
+                        <th>Company</th>
+                        @endcheck
                         <th>Avatar</th>
                         <th>Email</th>
                         <th>Role(s)</th>
@@ -49,6 +52,9 @@
                 <tfoot>
                     <tr>
                         <th>Username</th>
+                        @check("manage_companies")
+                        <th>Company</th>
+                        @endcheck
                         <th>Avatar</th>
                         <th>Email</th>
                         <th>Role(s)</th>
@@ -78,35 +84,42 @@ $(function () {
 
 
     var dataTable = $('#users').DataTable({
-        "paging": true,
-        "lengthChange": true,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        processing: true,
-        serverSide: true,
-        ajax: {
+    "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
             url: "{{ url('/') }}/admin/users/dataTables",
-            data: function (params) {
-                params.role = $("select#roles").val()
-            }
-        },
-        columns: [
+                    data: function (params) {
+                    params.role = $("select#roles").val()
+                    }
+            },
+            columns: [
             {data: 'username', name: 'Username'},
+                    @check("manage_companies")
+            {data: 'company_id', name: 'company_id'},
+                    @endcheck
             {data: 'avatar', name: 'Avatar'},
-            {data: 'email', name: 'Email'},
-            {data: 'bio', name: 'bio'},
-            {data: 'created_at', name: 'created_at'},
-            {data: 'updated_at', name: 'updated_at'}
-        ]
-    });
-
-    $('select#roles').on('change', function (e) {
-        dataTable.draw();
-        e.preventDefault();
-    });
-
+            {data: 'email', name: 'Email'}
+            ,
+            {data: 'bio', name: 'bio'}
+            ,
+            {data: 'created_at', name: 'created_at'}
+            ,
+            {data: 'updated_at', name: 'updated_at'
+            }
+            ]
 });
+
+$('select#roles').on('change', function (e) {
+dataTable.draw();
+        e.preventDefault();
+});
+        }
+);
 
 function confirm_delete() {
     var confirm = window.confirm("Are you sure you want to ban this user ?");

@@ -134,6 +134,12 @@ Route::group(['prefix' => '/admin', 'middleware' => 'web'], function() {
 
 
     /*
+     * Compamnies Route
+     */
+    Route::get('/companies/dataTables', ['uses' => 'CompaniesController@dataTables']);
+    Route::get('/companies/{id}/delete', ['uses' => 'CompaniesController@destroy']);
+    Route::resource('companies', 'CompaniesController');
+    /*
      * Categories Route
      */
     Route::get('/categories/dataTables', ['uses' => 'CategoriesController@dataTables']);

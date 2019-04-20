@@ -84,13 +84,8 @@
         @endcheck
 
 
-        @check("manage_workshops")
-        <li><a href="#"><i class="fa fa-newspaper-o"></i> <span>Workshops</span></a>
-            <ul class="treeview-menu">
-                <li>  <a  href="{{url('admin/categories')}}"> <i class="fa fa-bars"></i><span> Categories </span></a></li>
-                <li>  <a href="{{url('admin/workshops')}}"><i class="fa fa-gear"></i> <span> Workshops </span></a></li>
-                <li>  <a  href="{{url('admin/reviews')}}"> <i class="fa fa-star"></i><span> Reviews </span></a></li>
-            </ul>
+        @check("manage_companies")
+        <li><a href="{{url('admin/companies')}}"><i class="fa fa-newspaper-o"></i> <span>Companies</span></a>
         </li>
         @endcheck     
 

@@ -31,7 +31,7 @@ class CountriesController extends Controller {
 
         \Policy::check('manage_locations')->handle();
 
-        return \View::make('admin/countries/create')
+        return \View::make('admin/locations/countries/create')
                         ->with('page_title', 'Create Country');
     }
 

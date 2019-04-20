@@ -45,7 +45,7 @@
 <!-- /.box -->
 <!-- DataTables -->
 @section('footer_scripts')
-<script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>
 <script src="{{asset('bower_components/AdminLTE/plugins/datatables/dataTables.bootstrap.min.js')}}"></script>
 

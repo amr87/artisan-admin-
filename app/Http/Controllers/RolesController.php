@@ -109,6 +109,7 @@ class RolesController extends Controller {
             }
         }
 
+
         return \View::make('admin/roles/edit')
                         ->with('role', $role)
                         ->with('permissions', $permissions)

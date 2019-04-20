@@ -12,18 +12,20 @@
 
     <div class="box-header">
 
-        @check("manage_users")
-        <a href="{{url('admin/categories/create')}}" class="btn btn-primary"><span class="fa  fa-user-plus"></span> Add Category </a>
+        @check("manage_companies")
+        <a href="{{url('admin/companies/create')}}" class="btn btn-primary"><span class="fa  fa-plus-square"></span> Add Company </a>
         @endcheck
     </div>
     <!-- /.box-header -->
     <div class="box-body">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <table id="categories" class="display responsive nowrap  table table-bordered table-hover" cellspacing="0" width="100%">
+            <table id="companies" class="display responsive nowrap  table table-bordered table-hover" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Children</th>
+                         <th>Accounts Number</th>
+                        <th>Address</th>
+                        <th>Phone</th>
                         <th>Actions</th>
 
                     </tr>
@@ -31,8 +33,10 @@
                 <tfoot>
                     <tr>
                         <th>Name</th>
-                                <th>Children</th>
-                                <th>Actions</th>
+                        <th>Accounts Number</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
                     </tr>
                 </tfoot>
             </table>
@@ -52,7 +56,7 @@
 <script>
 $(function () {
 
-    var dataTable = $('#categories').DataTable({
+    var dataTable = $('#companies').DataTable({
         "paging": true,
         "lengthChange": true,
         "searching": true,
@@ -61,13 +65,15 @@ $(function () {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('/') }}/admin/categories/dataTables",
+            url: "{{ url('/') }}/admin/companies/dataTables",
         },
         columns: [
             {data: 'name', name: 'name'},
-            {data: 'parent_id', name: 'parent_id'},
-            {data: 'id', name: 'id'},
-
+              {data: 'created_at', name: 'created_at'},
+            {data: 'address', name: 'address'},
+            {data: 'phone', name: 'phone'},
+            {data: 'updated_at', name: 'updated_at'},
+          
         ]
     });
 
